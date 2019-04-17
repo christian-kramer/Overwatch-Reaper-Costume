@@ -512,12 +512,12 @@ $EndComp
 $Comp
 L Gun-board-rescue:+3V-custom_power #PWR?
 U 1 1 5CC0972E
-P 4650 6800
-F 0 "#PWR?" H 4650 6650 50  0001 C CNN
-F 1 "+3V" H 4665 6973 50  0000 C CNN
-F 2 "" H 4650 6800 50  0001 C CNN
-F 3 "" H 4650 6800 50  0001 C CNN
-	1    4650 6800
+P 4650 6500
+F 0 "#PWR?" H 4650 6350 50  0001 C CNN
+F 1 "+3V" H 4665 6673 50  0000 C CNN
+F 2 "" H 4650 6500 50  0001 C CNN
+F 3 "" H 4650 6500 50  0001 C CNN
+	1    4650 6500
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -587,17 +587,6 @@ F 3 "~" H 3680 6950 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
-	3650 6950 4150 6950
-Wire Wire Line
-	4650 6950 4150 6950
-Connection ~ 4150 6950
-Wire Wire Line
-	4650 6950 5150 6950
-Connection ~ 4650 6950
-Wire Wire Line
-	5150 6950 5650 6950
-Connection ~ 5150 6950
-Wire Wire Line
 	5650 7450 5150 7450
 Wire Wire Line
 	5150 7450 4650 7450
@@ -611,8 +600,8 @@ Connection ~ 4150 7450
 Wire Wire Line
 	4650 7450 4650 7650
 Wire Wire Line
-	4650 6800 4650 6950
-Text Notes 3650 6800 0    50   ~ 0
+	4650 6500 4650 6650
+Text Notes 3650 6500 0    50   ~ 0
 Laser Diode Array
 Text Label 7650 2200 0    50   ~ 0
 SELECT
@@ -997,6 +986,70 @@ F 1 "STM32F030F4Px" H 7050 1720 50  0000 C CNN
 F 2 "Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm" H 6650 2000 50  0001 R CNN
 F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/DM00088500.pdf" H 7050 2700 50  0001 C CNN
 	1    7050 2700
+	1    0    0    -1  
+$EndComp
+Text Label 6450 2200 2    50   ~ 0
+RESET
+Wire Wire Line
+	6450 2200 6550 2200
+$Comp
+L Device:R R?
+U 1 1 5CB6CB35
+P 3650 6800
+F 0 "R?" H 3720 6846 50  0000 L CNN
+F 1 "22Ω" H 3720 6755 50  0000 L CNN
+F 2 "" V 3580 6800 50  0001 C CNN
+F 3 "~" H 3650 6800 50  0001 C CNN
+	1    3650 6800
+	1    0    0    -1  
+$EndComp
+Connection ~ 4650 6650
+Wire Wire Line
+	3650 6650 4650 6650
+Wire Wire Line
+	4650 6650 5650 6650
+$Comp
+L Device:R R?
+U 1 1 5CB932C8
+P 4150 6800
+F 0 "R?" H 4220 6846 50  0000 L CNN
+F 1 "22Ω" H 4220 6755 50  0000 L CNN
+F 2 "" V 4080 6800 50  0001 C CNN
+F 3 "~" H 4150 6800 50  0001 C CNN
+	1    4150 6800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5CB9533D
+P 4650 6800
+F 0 "R?" H 4720 6846 50  0000 L CNN
+F 1 "22Ω" H 4720 6755 50  0000 L CNN
+F 2 "" V 4580 6800 50  0001 C CNN
+F 3 "~" H 4650 6800 50  0001 C CNN
+	1    4650 6800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5CB973AF
+P 5150 6800
+F 0 "R?" H 5220 6846 50  0000 L CNN
+F 1 "22Ω" H 5220 6755 50  0000 L CNN
+F 2 "" V 5080 6800 50  0001 C CNN
+F 3 "~" H 5150 6800 50  0001 C CNN
+	1    5150 6800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5CB99428
+P 5650 6800
+F 0 "R?" H 5720 6846 50  0000 L CNN
+F 1 "22Ω" H 5720 6755 50  0000 L CNN
+F 2 "" V 5580 6800 50  0001 C CNN
+F 3 "~" H 5650 6800 50  0001 C CNN
+	1    5650 6800
 	1    0    0    -1  
 $EndComp
 $EndSCHEMATC
