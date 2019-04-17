@@ -804,17 +804,6 @@ Wire Wire Line
 Connection ~ 2700 6150
 Wire Wire Line
 	2700 6150 2800 6150
-$Comp
-L power:VDD #PWR?
-U 1 1 5CB7800F
-P 1450 6050
-F 0 "#PWR?" H 1450 5900 50  0001 C CNN
-F 1 "VDD" H 1467 6223 50  0000 C CNN
-F 2 "" H 1450 6050 50  0001 C CNN
-F 3 "" H 1450 6050 50  0001 C CNN
-	1    1450 6050
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	1450 6050 1450 6150
 $Comp
@@ -1054,4 +1043,69 @@ Wire Wire Line
 	1100 4800 1350 4800
 Wire Wire Line
 	650  4800 900  4800
+$Comp
+L RF:NRF24L01_Breakout U?
+U 1 1 5CB96636
+P 7150 4900
+F 0 "U?" H 7628 4878 50  0000 L CNN
+F 1 "NRF24L01_Breakout" H 7628 4787 50  0000 L CNN
+F 2 "RF_Module:nRF24L01_Breakout" H 7300 5500 50  0001 L CIN
+F 3 "http://www.nordicsemi.com/eng/content/download/2730/34105/file/nRF24L01_Product_Specification_v2_0.pdf" H 7150 4800 50  0001 C CNN
+	1    7150 4900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VDD #PWR?
+U 1 1 5CB7800F
+P 1450 6050
+F 0 "#PWR?" H 1450 5900 50  0001 C CNN
+F 1 "VDD" H 1467 6223 50  0000 C CNN
+F 2 "" H 1450 6050 50  0001 C CNN
+F 3 "" H 1450 6050 50  0001 C CNN
+	1    1450 6050
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5CBA4CF1
+P 7150 5500
+F 0 "#PWR?" H 7150 5250 50  0001 C CNN
+F 1 "GND" H 7155 5327 50  0000 C CNN
+F 2 "" H 7150 5500 50  0001 C CNN
+F 3 "" H 7150 5500 50  0001 C CNN
+	1    7150 5500
+	1    0    0    -1  
+$EndComp
+Text Label 6550 4700 2    50   ~ 0
+MISO
+Wire Wire Line
+	6550 4600 6650 4600
+Text Label 6550 4600 2    50   ~ 0
+MOSI
+Text Label 6550 4800 2    50   ~ 0
+SCK
+Text Label 6550 4900 2    50   ~ 0
+CSN
+Text Label 6550 5100 2    50   ~ 0
+CE
+$Comp
+L power:+3.3V #PWR?
+U 1 1 5CBCB499
+P 7150 4300
+F 0 "#PWR?" H 7150 4150 50  0001 C CNN
+F 1 "+3.3V" H 7165 4473 50  0000 C CNN
+F 2 "" H 7150 4300 50  0001 C CNN
+F 3 "" H 7150 4300 50  0001 C CNN
+	1    7150 4300
+	1    0    0    -1  
+$EndComp
+NoConn ~ 6650 5200
+Wire Wire Line
+	6550 4700 6650 4700
+Wire Wire Line
+	6550 4800 6650 4800
+Wire Wire Line
+	6550 4900 6650 4900
+Wire Wire Line
+	6550 5100 6650 5100
 $EndSCHEMATC
