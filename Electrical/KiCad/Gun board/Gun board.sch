@@ -1,6 +1,6 @@
 EESchema Schematic File Version 4
 LIBS:Gun board-cache
-EELAYER 29 0
+EELAYER 26 0
 EELAYER END
 $Descr USLetter 11000 8500
 encoding utf-8
@@ -59,7 +59,7 @@ F 3 "" H 3450 1050 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Gun-board-rescue:AAT1217-aat1217.lib-Gun-board-rescue U?
+L Gun-board-rescue:AAT1217-aat1217.lib-Gun-board-rescue-Gun-board-rescue U?
 U 1 1 5CB9C019
 P 1700 1300
 F 0 "U?" H 1700 1481 50  0000 C CNN
@@ -401,7 +401,7 @@ F 3 "" H 750 3600 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Gun-board-rescue:AAT1217-aat1217.lib-Gun-board-rescue U?
+L Gun-board-rescue:AAT1217-aat1217.lib-Gun-board-rescue-Gun-board-rescue U?
 U 1 1 5CB12524
 P 1500 3150
 F 0 "U?" H 1500 3331 50  0000 C CNN
@@ -412,7 +412,7 @@ F 3 "" H 900 2550 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Gun-board-rescue:+3V-custom_power-Gun-board-rescue #PWR?
+L Gun-board-rescue:+3V-custom_power-Gun-board-rescue-Gun-board-rescue #PWR?
 U 1 1 5CC0972E
 P 1850 6600
 F 0 "#PWR?" H 1850 6450 50  0001 C CNN
@@ -423,7 +423,7 @@ F 3 "" H 1850 6600 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Gun-board-rescue:GND-custom_power-Gun-board-rescue #PWR?
+L Gun-board-rescue:GND-custom_power-Gun-board-rescue-Gun-board-rescue #PWR?
 U 1 1 5CC09FE8
 P 1850 7750
 F 0 "#PWR?" H 1850 7500 50  0001 C CNN
@@ -781,7 +781,7 @@ Wire Wire Line
 Wire Wire Line
 	6850 1750 6950 1750
 $Comp
-L Gun-board-rescue:STM32F030F4Px-MCU_ST_STM32F0 U?
+L Gun-board-rescue:STM32F030F4Px-MCU_ST_STM32F0-Gun-board-rescue U?
 U 1 1 5CB198C5
 P 5250 1650
 F 0 "U?" H 5250 761 50  0000 C CNN
@@ -1133,7 +1133,7 @@ F 3 "~" H 2550 5450 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Gun-board-rescue:GND-custom_power-Gun-board-rescue #PWR?
+L Gun-board-rescue:GND-custom_power-Gun-board-rescue-Gun-board-rescue #PWR?
 U 1 1 5CC02426
 P 2550 5600
 F 0 "#PWR?" H 2550 5350 50  0001 C CNN
@@ -1146,7 +1146,7 @@ $EndComp
 Wire Wire Line
 	2100 5300 2550 5300
 $Comp
-L Gun-board-rescue:GND-custom_power-Gun-board-rescue #PWR?
+L Gun-board-rescue:GND-custom_power-Gun-board-rescue-Gun-board-rescue #PWR?
 U 1 1 5CBFEF57
 P 2100 5900
 F 0 "#PWR?" H 2100 5650 50  0001 C CNN
@@ -1185,7 +1185,7 @@ F 3 "~" H 2100 5450 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Gun-board-rescue:+3V-custom_power-Gun-board-rescue #PWR?
+L Gun-board-rescue:+3V-custom_power-Gun-board-rescue-Gun-board-rescue #PWR?
 U 1 1 5CBFAAE2
 P 2550 5300
 F 0 "#PWR?" H 2550 5150 50  0001 C CNN
@@ -1248,7 +1248,7 @@ F 3 "~" H 9950 3000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L custom_power:GND #PWR?
+L Gun-board-rescue:GND-custom_power #PWR?
 U 1 1 5CBED840
 P 9950 3550
 F 0 "#PWR?" H 9950 3300 50  0001 C CNN
@@ -1259,7 +1259,7 @@ F 3 "" H 9950 3550 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L custom_power:+3.3V #PWR?
+L Gun-board-rescue:+3.3V-custom_power #PWR?
 U 1 1 5CBED83A
 P 9950 2850
 F 0 "#PWR?" H 9950 2700 50  0001 C CNN
@@ -1286,7 +1286,7 @@ F 3 "~" H 9950 2000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L custom_power:GND #PWR?
+L Gun-board-rescue:GND-custom_power #PWR?
 U 1 1 5CBA2547
 P 9950 2350
 F 0 "#PWR?" H 9950 2100 50  0001 C CNN
@@ -1297,7 +1297,7 @@ F 3 "" H 9950 2350 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L custom_power:+3.3V #PWR?
+L Gun-board-rescue:+3.3V-custom_power #PWR?
 U 1 1 5CBA1B30
 P 9950 1850
 F 0 "#PWR?" H 9950 1700 50  0001 C CNN
@@ -1363,7 +1363,7 @@ F 3 "~" H 9950 4250 50  0001 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L custom_power:+3.3V #PWR?
+L Gun-board-rescue:+3.3V-custom_power #PWR?
 U 1 1 5CDF6904
 P 9950 4100
 F 0 "#PWR?" H 9950 3950 50  0001 C CNN
@@ -1374,7 +1374,7 @@ F 3 "" H 9950 4100 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L custom_power:GND #PWR?
+L Gun-board-rescue:GND-custom_power #PWR?
 U 1 1 5CDF737B
 P 9950 4400
 F 0 "#PWR?" H 9950 4150 50  0001 C CNN
@@ -1389,7 +1389,7 @@ VOLUME
 Wire Wire Line
 	9750 4250 9800 4250
 $Comp
-L Connector:Micro_SD_Card J?
+L Gun-board-rescue:Micro_SD_Card-Connector J?
 U 1 1 5CD7984C
 P 9600 5900
 F 0 "J?" H 9550 6617 50  0000 C CNN
@@ -1404,7 +1404,7 @@ NoConn ~ 8700 6300
 Text Label 8550 5700 2    50   ~ 0
 CE1
 $Comp
-L custom_power:+3.3V #PWR?
+L Gun-board-rescue:+3.3V-custom_power #PWR?
 U 1 1 5CDA1BCA
 P 8550 5900
 F 0 "#PWR?" H 8550 5750 50  0001 C CNN
@@ -1417,7 +1417,7 @@ $EndComp
 Text Label 8550 6000 2    50   ~ 0
 SCK
 $Comp
-L custom_power:GND #PWR?
+L Gun-board-rescue:GND-custom_power #PWR?
 U 1 1 5CDA338C
 P 8550 6100
 F 0 "#PWR?" H 8550 5850 50  0001 C CNN
@@ -1444,7 +1444,7 @@ Wire Wire Line
 Wire Wire Line
 	8550 6200 8700 6200
 $Comp
-L custom_power:GND #PWR?
+L Gun-board-rescue:GND-custom_power #PWR?
 U 1 1 5CDC79B8
 P 10400 6500
 F 0 "#PWR?" H 10400 6250 50  0001 C CNN
@@ -1477,7 +1477,7 @@ Wire Wire Line
 Wire Wire Line
 	4100 3750 4200 3750
 $Comp
-L custom_power:GND #PWR?
+L Gun-board-rescue:GND-custom_power #PWR?
 U 1 1 5CDE7E11
 P 4100 3750
 F 0 "#PWR?" H 4100 3500 50  0001 C CNN
@@ -1488,7 +1488,7 @@ F 3 "" H 4100 3750 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L custom_power:+3.3V #PWR?
+L Gun-board-rescue:+3.3V-custom_power #PWR?
 U 1 1 5CDE6399
 P 4100 3550
 F 0 "#PWR?" H 4100 3400 50  0001 C CNN
@@ -1509,7 +1509,7 @@ CE
 Wire Wire Line
 	7650 5400 8050 5400
 $Comp
-L custom_power:+3.3V #PWR?
+L Gun-board-rescue:+3.3V-custom_power #PWR?
 U 1 1 5CC34465
 P 6350 6100
 F 0 "#PWR?" H 6350 5950 50  0001 C CNN
@@ -1536,7 +1536,7 @@ L Device:R R?
 U 1 1 5CCB5B54
 P 6700 6100
 F 0 "R?" V 6493 6100 50  0000 C CNN
-F 1 "R" V 6584 6100 50  0000 C CNN
+F 1 "10kΩ" V 6584 6100 50  0000 C CNN
 F 2 "" V 6630 6100 50  0001 C CNN
 F 3 "~" H 6700 6100 50  0001 C CNN
 	1    6700 6100
@@ -1560,14 +1560,14 @@ L Device:R R?
 U 1 1 5CC4FC6A
 P 7500 5900
 F 0 "R?" V 7293 5900 50  0000 C CNN
-F 1 "R" V 7384 5900 50  0000 C CNN
+F 1 "4.7kΩ" V 7384 5900 50  0000 C CNN
 F 2 "" V 7430 5900 50  0001 C CNN
 F 3 "~" H 7500 5900 50  0001 C CNN
 	1    7500 5900
 	0    -1   -1   0   
 $EndComp
 $Comp
-L custom_power:GND #PWR?
+L Gun-board-rescue:GND-custom_power #PWR?
 U 1 1 5CC4FC70
 P 7050 5700
 F 0 "#PWR?" H 7050 5450 50  0001 C CNN
@@ -1581,7 +1581,7 @@ Connection ~ 6350 5200
 Wire Wire Line
 	6350 5200 5950 5200
 $Comp
-L custom_power:GND #PWR?
+L Gun-board-rescue:GND-custom_power #PWR?
 U 1 1 5CC31331
 P 6350 4900
 F 0 "#PWR?" H 6350 4650 50  0001 C CNN
@@ -1596,7 +1596,7 @@ L Device:R R?
 U 1 1 5CC27101
 P 6800 5400
 F 0 "R?" V 6593 5400 50  0000 C CNN
-F 1 "R" V 6684 5400 50  0000 C CNN
+F 1 "4.7kΩ" V 6684 5400 50  0000 C CNN
 F 2 "" V 6730 5400 50  0001 C CNN
 F 3 "~" H 6800 5400 50  0001 C CNN
 	1    6800 5400
@@ -1607,7 +1607,7 @@ L Device:R R?
 U 1 1 5CC23FD2
 P 6350 5050
 F 0 "R?" V 6143 5050 50  0000 C CNN
-F 1 "R" V 6234 5050 50  0000 C CNN
+F 1 "10kΩ" V 6234 5050 50  0000 C CNN
 F 2 "" V 6280 5050 50  0001 C CNN
 F 3 "~" H 6350 5050 50  0001 C CNN
 	1    6350 5050
@@ -1639,7 +1639,7 @@ I2C_SCL
 Text Label 7150 3850 2    50   ~ 0
 I2C_SDA
 $Comp
-L custom_power:GND #PWR?
+L Gun-board-rescue:GND-custom_power #PWR?
 U 1 1 5CFA5BBD
 P 6400 3650
 F 0 "#PWR?" H 6400 3400 50  0001 C CNN
@@ -1650,7 +1650,7 @@ F 3 "" H 6400 3650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L custom_power:+3.3V #PWR?
+L Gun-board-rescue:+3.3V-custom_power #PWR?
 U 1 1 5CFA5996
 P 6400 3450
 F 0 "#PWR?" H 6400 3300 50  0001 C CNN
@@ -1671,7 +1671,7 @@ Wire Wire Line
 Wire Wire Line
 	8000 3650 8200 3650
 $Comp
-L custom_power:GND #PWR?
+L Gun-board-rescue:GND-custom_power #PWR?
 U 1 1 5CF8B068
 P 8200 4350
 F 0 "#PWR?" H 8200 4100 50  0001 C CNN
@@ -1695,7 +1695,7 @@ $EndComp
 Wire Wire Line
 	8700 3750 8700 3900
 $Comp
-L custom_power:GND #PWR?
+L Gun-board-rescue:GND-custom_power #PWR?
 U 1 1 5CF7D7A0
 P 8700 3900
 F 0 "#PWR?" H 8700 3650 50  0001 C CNN
@@ -1721,7 +1721,7 @@ Wire Wire Line
 Wire Wire Line
 	7150 3250 7150 3450
 $Comp
-L custom_power:GND #PWR?
+L Gun-board-rescue:GND-custom_power #PWR?
 U 1 1 5CF53E7D
 P 7600 3950
 F 0 "#PWR?" H 7600 3700 50  0001 C CNN
@@ -1732,7 +1732,7 @@ F 3 "" H 7600 3950 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L custom_power:GND #PWR?
+L Gun-board-rescue:GND-custom_power #PWR?
 U 1 1 5CF531DF
 P 7400 3750
 F 0 "#PWR?" H 7400 3500 50  0001 C CNN
@@ -1745,7 +1745,7 @@ $EndComp
 Text Label 7150 3250 2    50   ~ 0
 SPK
 $Comp
-L custom_power:+5V #PWR?
+L Gun-board-rescue:+5V-custom_power #PWR?
 U 1 1 5CF50F83
 P 7600 3350
 F 0 "#PWR?" H 7600 3200 50  0001 C CNN
@@ -1756,7 +1756,7 @@ F 3 "" H 7600 3350 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L custom_components:MCP4018 U?
+L Gun-board-rescue:MCP4018-custom_components U?
 U 1 1 5CF2C1FE
 P 6800 3550
 F 0 "U?" H 6800 3875 50  0000 C CNN
@@ -1801,7 +1801,7 @@ F 3 "http://www.ti.com/lit/ds/symlink/lm386.pdf" H 7900 3850 50  0001 C CNN
 $EndComp
 Connection ~ 7650 5400
 $Comp
-L custom_power:+3.3V #PWR?
+L Gun-board-rescue:+3.3V-custom_power #PWR?
 U 1 1 5CE8FC7C
 P 5500 3350
 F 0 "#PWR?" H 5500 3200 50  0001 C CNN
@@ -1839,7 +1839,7 @@ Text Label 5150 3650 0    50   ~ 0
 I2C_SCL
 Connection ~ 4200 3550
 $Comp
-L custom_components:MCP4725 U?
+L Gun-board-rescue:MCP4725-custom_components U?
 U 1 1 5CE30293
 P 4550 3650
 F 0 "U?" H 4550 3975 50  0000 C CNN
