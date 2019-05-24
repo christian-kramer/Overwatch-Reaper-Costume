@@ -1,5 +1,8 @@
 #MicroXplorer Configuration settings - do not modify
 File.Version=6
+I2C1.I2C_Speed_Mode=I2C_Fast
+I2C1.IPParameters=I2C_Speed_Mode,Timing
+I2C1.Timing=0x0000020B
 KeepUserPlacement=false
 Mcu.Family=STM32F0
 Mcu.IP0=I2C1
@@ -25,7 +28,6 @@ NVIC.NonMaskableInt_IRQn=true\:0\:0\:false\:false\:true\:false
 NVIC.PendSV_IRQn=true\:0\:0\:false\:false\:true\:false
 NVIC.SVC_IRQn=true\:0\:0\:false\:false\:true\:false
 NVIC.SysTick_IRQn=true\:0\:0\:false\:false\:true\:false
-NVIC.TIM3_IRQn=true\:0\:0\:false\:false\:true\:true
 PA10.Mode=I2C
 PA10.Signal=I2C1_SDA
 PA9.Mode=I2C
@@ -70,6 +72,8 @@ RCC.FamilyName=M
 RCC.IPParameters=FamilyName,PLLCLKFreq_Value,TimSysFreq_Value
 RCC.PLLCLKFreq_Value=8000000
 RCC.TimSysFreq_Value=8000000
+TIM3.IPParameters=Period
+TIM3.Period=999
 VP_SYS_VS_Systick.Mode=SysTick
 VP_SYS_VS_Systick.Signal=SYS_VS_Systick
 VP_TIM3_VS_ClockSourceINT.Mode=Internal

@@ -67,7 +67,46 @@ static void MX_I2C1_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
+unsigned char buffer[3];
 
+void dacOutput(char eightBitValue)
+{
+
+	//int twelveBitValue = eightBitValue * ((1 << 12) - 1) / ((1 << 8) - 1);
+	int twelveBitValue = eightBitValue << 4 | eightBitValue >> 4;
+	buffer[0] = 0x40;
+	buffer[1] = twelveBitValue>>4;
+	buffer[2] = twelveBitValue<<4;
+	HAL_I2C_Master_Transmit(&hi2c1, 0x61<<1, buffer, 3, 100);
+}
+
+/*
+int state = 1;
+int pos = 0;
+size_t ledlength = sizeof(sounddata)/sizeof(sounddata[0]);
+
+
+HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	if (htim->Instance == TIM3)
+	{
+		if (state == 1)
+		{
+			if (pos < ledlength)
+			{
+				dacOutput(sounddata[pos]);
+				pos++;
+			}
+			else
+			{
+				state = 0;
+				pos = 0;
+				dacOutput(0);
+			}
+		}
+	}
+}
+*/
 /* USER CODE END 0 */
 
 /**
@@ -102,29 +141,31 @@ int main(void)
   MX_TIM3_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-  int mcpvalue = 0xFFF;
-
-  unsigned char buffer[3];
-
-  // >>>>101011001011
-  //     00000000
-
-  // 101011001011<<<<
-  //         00000000
-
-  buffer[0] = 0x40;
-  buffer[1] = mcpvalue>>4;
-  buffer[2] = mcpvalue<<4;
+  int state = 1;
+  int pos = 0;
+  size_t ledlength = sizeof(sounddata)/sizeof(sounddata[0]);
 
 
-  HAL_I2C_Master_Transmit(&hi2c1, 0x61<<1, buffer, 3, 100);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
+	  if (state == 1)
+	    {
+	  	  if (pos < ledlength)
+	  	  {
+	  		  dacOutput(sounddata[pos]);
+	  		  pos++;
+	  	  }
+	  	  else
+	  	  {
+	  		  state = 0;
+	  		  pos = 0;
+	  		  dacOutput(0);
+	  	  }
+	    }
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
@@ -193,7 +234,7 @@ static void MX_I2C1_Init(void)
 {
 
   hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x2000090E;
+  hi2c1.Init.Timing = 0x0000020B;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
@@ -232,7 +273,7 @@ static void MX_TIM3_Init(void)
   htim3.Instance = TIM3;
   htim3.Init.Prescaler = 0;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 0;
+  htim3.Init.Period = 999;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
