@@ -41,12 +41,10 @@
 #include "stm32f0xx_hal.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "MY_NRF24.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
-I2C_HandleTypeDef hi2c1;
-
 SPI_HandleTypeDef hspi1;
 
 /* USER CODE BEGIN PV */
@@ -58,7 +56,6 @@ SPI_HandleTypeDef hspi1;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
-static void MX_I2C1_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -67,43 +64,6 @@ static void MX_I2C1_Init(void);
 
 /* USER CODE BEGIN 0 */
 
-uint16_t spibaudrate = SPI_BAUDRATEPRESCALER_16;
-
-unsigned char buffer[3];
-
-void dacOutput(char eightBitValue)
-{
-
-	//int twelveBitValue = eightBitValue * ((1 << 12) - 1) / ((1 << 8) - 1);
-	int twelveBitValue = eightBitValue << 4 | eightBitValue >> 4;
-	buffer[0] = 0x40;
-	buffer[1] = twelveBitValue>>4;
-	buffer[2] = twelveBitValue<<4;
-	HAL_I2C_Master_Transmit(&hi2c1, 0x61<<1, buffer, 3, 100);
-}
-
-
-char flashRead(int location)
-{
-	uint8_t spiTxBuf[4], spiRxBuf[1];
-
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
-
-
-	spibaudrate = SPI_BAUDRATEPRESCALER_2;
-	MX_SPI1_Init();
-
-
-	spiTxBuf[0] = 0x03;
-	spiTxBuf[1] = location>>16; //first byte of address
-	spiTxBuf[2] = location>>8; //second byte of address
-	spiTxBuf[3] = location; //third byte of address
-	HAL_SPI_Transmit(&hspi1, spiTxBuf, 4, 50);
-	HAL_SPI_Receive(&hspi1, spiRxBuf, 1, 50);
-	//HAL_SPI_TransmitReceive(&hspi1, spiTxBuf, spiRxBuf, 4, 50);
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
-	return spiRxBuf[0];
-}
 /* USER CODE END 0 */
 
 /**
@@ -136,36 +96,56 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_SPI1_Init();
-  MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-  /*
-  int pos = 0x00002c;
-  int end = 0x007930;
-  */
-  //size_t ledlength = sizeof(sounddata)/sizeof(sounddata[0]);
+  //char data[32] = "abcd";
+  char rxData[50];
 
+  NRF24_begin(GPIOA, GPIO_PIN_1, NULL, hspi1);
+
+  NRF24_setAutoAck(false);
+  NRF24_setChannel(52);
+  NRF24_setPayloadSize(32);
+
+  NRF24_openReadingPipe(1, 0x11223344AA);
+  NRF24_startListening();
+
+
+
+  /*
+  NRF24_stopListening();
+  NRF24_openWritingPipe(0x11223344AA);
+  NRF24_setAutoAck(false);
+  NRF24_setChannel(52);
+  NRF24_setPayloadSize(32);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+  */
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  for (int i = 0x00002c; i < 0x007930; i++)
+	  if (NRF24_available())
 	  {
-		  dacOutput(flashRead(i));
+		  NRF24_read(rxData, 32);
+		  if (strcmp(rxData, "abcd") == 0)
+		  {
+			  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+		  }
 	  }
 	  /*
-	  if (pos < end)
+	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+	  HAL_Delay(10);
+	  if (NRF24_write(data, 32))
 	  {
-		  dacOutput(flashRead(pos));
-		  pos++;
+		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
 	  }
 	  else
 	  {
-		  pos = 0x00002c;
+		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
 	  }
+	  HAL_Delay(1000);
 	  */
-
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
@@ -184,7 +164,6 @@ void SystemClock_Config(void)
 
   RCC_OscInitTypeDef RCC_OscInitStruct;
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
-  RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
     /**Initializes the CPU, AHB and APB busses clocks 
     */
@@ -213,13 +192,6 @@ void SystemClock_Config(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1;
-  PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_SYSCLK;
-  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
     /**Configure the Systick interrupt time 
     */
   HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
@@ -230,44 +202,6 @@ void SystemClock_Config(void)
 
   /* SysTick_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
-}
-
-/* I2C1 init function */
-static void MX_I2C1_Init(void)
-{
-
-  hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x00000309;
-  hi2c1.Init.OwnAddress1 = 0;
-  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c1.Init.OwnAddress2 = 0;
-  hi2c1.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
-  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-    /**Configure Analogue filter 
-    */
-  if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-    /**Configure Digital filter 
-    */
-  if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-    /**I2C Fast mode Plus enable 
-    */
-  __HAL_SYSCFG_FASTMODEPLUS_ENABLE(I2C_FASTMODEPLUS_I2C1);
-
 }
 
 /* SPI1 init function */
@@ -282,7 +216,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = spibaudrate;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -313,14 +247,24 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, RF_CE_Pin|RF_CSN_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : PB1 */
-  GPIO_InitStruct.Pin = GPIO_PIN_1;
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIO_LED_GPIO_Port, GPIO_LED_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : RF_CE_Pin RF_CSN_Pin */
+  GPIO_InitStruct.Pin = RF_CE_Pin|RF_CSN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : GPIO_LED_Pin */
+  GPIO_InitStruct.Pin = GPIO_LED_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIO_LED_GPIO_Port, &GPIO_InitStruct);
 
 }
 
