@@ -97,23 +97,21 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-  //char data[32] = "abcd";
+
+  char txData[32] = "play";
   char rxData[50];
+  char waiting = 1;
 
   NRF24_begin(GPIOA, GPIO_PIN_1, NULL, hspi1);
 
-  NRF24_setAutoAck(false);
+  NRF24_setAutoAck(true);
   NRF24_setChannel(52);
   NRF24_setPayloadSize(32);
 
-  NRF24_openReadingPipe(1, 0x11223344AA);
-  NRF24_startListening();
-
-
-
-  /*
   NRF24_stopListening();
   NRF24_openWritingPipe(0x11223344AA);
+
+  /*
   NRF24_setAutoAck(false);
   NRF24_setChannel(52);
   NRF24_setPayloadSize(32);
@@ -125,12 +123,24 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if (NRF24_available())
+	  if (waiting)
 	  {
-		  NRF24_read(rxData, 32);
-		  if (strcmp(rxData, "abcd") == 0)
+		  if (NRF24_write(txData, 32))
 		  {
-			  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+			  waiting = 0;
+			  NRF24_openReadingPipe(1, 0x11223344AA);
+			  NRF24_startListening();
+		  }
+	  }
+	  else
+	  {
+		  if (NRF24_available())
+		  {
+			  NRF24_read(rxData, 32);
+			  if (strcmp(rxData, "done") == 0)
+			  {
+				  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+			  }
 		  }
 	  }
 	  /*

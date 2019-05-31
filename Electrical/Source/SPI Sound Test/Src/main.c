@@ -41,7 +41,7 @@
 #include "stm32f0xx_hal.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "MY_NRF24.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -67,8 +67,6 @@ static void MX_I2C1_Init(void);
 
 /* USER CODE BEGIN 0 */
 
-uint16_t spibaudrate = SPI_BAUDRATEPRESCALER_16;
-
 unsigned char buffer[3];
 
 void dacOutput(char eightBitValue)
@@ -88,11 +86,6 @@ char flashRead(int location)
 	uint8_t spiTxBuf[4], spiRxBuf[1];
 
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
-
-
-	spibaudrate = SPI_BAUDRATEPRESCALER_2;
-	MX_SPI1_Init();
-
 
 	spiTxBuf[0] = 0x03;
 	spiTxBuf[1] = location>>16; //first byte of address
@@ -143,6 +136,23 @@ int main(void)
   int end = 0x007930;
   */
   //size_t ledlength = sizeof(sounddata)/sizeof(sounddata[0]);
+  char rxData[50];
+  char txData[32] = "done";
+  char waiting = 1;
+
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+
+  HAL_Delay(100);
+
+  NRF24_begin(GPIOA, GPIO_PIN_1, NULL, hspi1);
+
+  NRF24_setAutoAck(true);
+  NRF24_setChannel(52);
+  NRF24_setPayloadSize(32);
+
+  NRF24_openReadingPipe(1, 0x11223344AA);
+  NRF24_startListening();
 
   /* USER CODE END 2 */
 
@@ -150,9 +160,26 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  for (int i = 0x00002c; i < 0x007930; i++)
+	  if (waiting)
 	  {
-		  dacOutput(flashRead(i));
+		  if (NRF24_available())
+		  {
+			  NRF24_read(rxData, 32);
+			  if (strcmp(rxData, "play") == 0)
+			  {
+				  for (int i = 0x00002c; i < 0x007930; i++)
+				  {
+					  dacOutput(flashRead(i));
+				  }
+				  waiting = 0;
+			  }
+		  }
+	  }
+	  else
+	  {
+		  NRF24_stopListening();
+		  NRF24_openWritingPipe(0x11223344AA);
+		  NRF24_write(txData, 32);
 	  }
 	  /*
 	  if (pos < end)
@@ -193,7 +220,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSICalibrationValue = 16;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL5;
+  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL7;
   RCC_OscInitStruct.PLL.PREDIV = RCC_PREDIV_DIV1;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -208,7 +235,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
@@ -237,7 +264,7 @@ static void MX_I2C1_Init(void)
 {
 
   hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x00000309;
+  hi2c1.Init.Timing = 0x20000203;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
@@ -282,7 +309,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = spibaudrate;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -313,7 +340,17 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : PA1 */
+  GPIO_InitStruct.Pin = GPIO_PIN_1;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PB1 */
   GPIO_InitStruct.Pin = GPIO_PIN_1;
