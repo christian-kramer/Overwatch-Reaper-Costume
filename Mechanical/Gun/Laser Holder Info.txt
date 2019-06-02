@@ -1,0 +1,5 @@
+4.5cm wide
+1.5cm tall
+2cm center-to-screw-middle distance
+
+3mm screw diameter

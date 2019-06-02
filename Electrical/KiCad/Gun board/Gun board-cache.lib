@@ -1,11 +1,11 @@
 EESchema-LIBRARY Version 2.4
 #encoding utf-8
 #
-# Amplifier_Audio_LM386
+# Amplifier_Audio:LM386
 #
-DEF Amplifier_Audio_LM386 U 0 5 Y Y 1 F N
+DEF Amplifier_Audio:LM386 U 0 5 Y Y 1 F N
 F0 "U" 50 300 50 H V L CNN
-F1 "Amplifier_Audio_LM386" 50 200 50 H V L CNN
+F1 "Amplifier_Audio:LM386" 50 200 50 H V L CNN
 F2 "" 100 100 50 H I C CNN
 F3 "" 200 200 50 H I C CNN
 $FPLIST
@@ -27,11 +27,11 @@ X GAIN 8 100 -300 250 U 50 20 1 1 I
 ENDDRAW
 ENDDEF
 #
-# Connector_Generic_Conn_01x05
+# Connector_Generic:Conn_01x05
 #
-DEF Connector_Generic_Conn_01x05 J 0 40 Y N 1 F N
+DEF Connector_Generic:Conn_01x05 J 0 40 Y N 1 F N
 F0 "J" 0 300 50 H V C CNN
-F1 "Connector_Generic_Conn_01x05" 0 -300 50 H V C CNN
+F1 "Connector_Generic:Conn_01x05" 0 -300 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -52,11 +52,11 @@ X Pin_5 5 -200 -200 150 R 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Device_Battery
+# Device:Battery
 #
-DEF Device_Battery BT 0 0 N N 1 F N
+DEF Device:Battery BT 0 0 N N 1 F N
 F0 "BT" 100 100 50 H V L CNN
-F1 "Device_Battery" 100 0 50 H V L CNN
+F1 "Device:Battery" 100 0 50 H V L CNN
 F2 "" 0 60 50 V I C CNN
 F3 "" 0 60 50 V I C CNN
 DRAW
@@ -77,11 +77,11 @@ X - 2 0 -200 100 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Device_C
+# Device:C
 #
-DEF Device_C C 0 10 N Y 1 F N
+DEF Device:C C 0 10 N Y 1 F N
 F0 "C" 25 100 50 H V L CNN
-F1 "Device_C" 25 -100 50 H V L CNN
+F1 "Device:C" 25 -100 50 H V L CNN
 F2 "" 38 -150 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -95,19 +95,22 @@ X ~ 2 0 -150 110 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Device_CP
+# Device:CP
 #
-DEF Device_CP C 0 10 N Y 1 F N
+DEF Device:CP C 0 10 N Y 1 F N
 F0 "C" 25 100 50 H V L CNN
-F1 "Device_CP" 25 -100 50 H V L CNN
+F1 "Device:CP" 25 -100 50 H V L CNN
 F2 "" 38 -150 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
  CP_*
 $ENDFPLIST
 DRAW
-S -90 20 90 40 0 1 0 N
+S -90 20 -90 40 0 1 0 N
+S -90 20 90 20 0 1 0 N
 S 90 -20 -90 -40 0 1 0 F
+S 90 40 -90 40 0 1 0 N
+S 90 40 90 20 0 1 0 N
 P 2 0 1 0 -70 90 -30 90 N
 P 2 0 1 0 -50 110 -50 70 N
 X ~ 1 0 150 110 D 50 50 1 1 P
@@ -115,11 +118,11 @@ X ~ 2 0 -150 110 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Device_D_Schottky
+# Device:D_Schottky
 #
-DEF Device_D_Schottky D 0 40 N N 1 F N
+DEF Device:D_Schottky D 0 40 N N 1 F N
 F0 "D" 0 100 50 H V C CNN
-F1 "Device_D_Schottky" 0 -100 50 H V C CNN
+F1 "Device:D_Schottky" 0 -100 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -137,16 +140,13 @@ X A 2 150 0 100 L 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Device_Jumper_NC_Small
+# Device:Jumper_NC_Small
 #
-DEF Device_Jumper_NC_Small JP 0 30 N N 1 F N
+DEF Device:Jumper_NC_Small JP 0 30 N N 1 F N
 F0 "JP" 0 80 50 H V C CNN
-F1 "Device_Jumper_NC_Small" 10 -60 50 H V C CNN
+F1 "Device:Jumper_NC_Small" 10 -60 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
-$FPLIST
- SolderJumper*Bridged*
-$ENDFPLIST
 DRAW
 A 0 -10 57 450 1350 0 1 0 N 40 30 -40 30
 C -40 0 20 0 1 0 N
@@ -156,11 +156,11 @@ X 2 2 100 0 40 L 50 50 0 1 P
 ENDDRAW
 ENDDEF
 #
-# Device_L
+# Device:L
 #
-DEF Device_L L 0 40 N N 1 F N
+DEF Device:L L 0 40 N N 1 F N
 F0 "L" -50 0 50 V V C CNN
-F1 "Device_L" 75 0 50 V V C CNN
+F1 "Device:L" 75 0 50 V V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -179,11 +179,11 @@ X 2 2 0 -150 50 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Device_LED
+# Device:LED
 #
-DEF Device_LED D 0 40 N N 1 F N
+DEF Device:LED D 0 40 N N 1 F N
 F0 "D" 0 100 50 H V C CNN
-F1 "Device_LED" 0 -100 50 H V C CNN
+F1 "Device:LED" 0 -100 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -202,11 +202,11 @@ X A 2 150 0 100 L 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Device_Laserdiode_1C2A
+# Device:Laserdiode_1C2A
 #
-DEF Device_Laserdiode_1C2A LD 0 40 Y N 1 F N
+DEF Device:Laserdiode_1C2A LD 0 40 Y N 1 F N
 F0 "LD" -50 175 50 H V C CNN
-F1 "Device_Laserdiode_1C2A" -50 -100 50 H V C CNN
+F1 "Device:Laserdiode_1C2A" -50 -100 50 H V C CNN
 F2 "" -100 -25 50 H I C CNN
 F3 "" 30 -200 50 H I C CNN
 $FPLIST
@@ -233,43 +233,11 @@ X A 2 200 0 100 L 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Device_Q_PMOS_DGS
+# Device:R
 #
-DEF Device_Q_PMOS_DGS Q 0 0 Y N 1 F N
-F0 "Q" 200 50 50 H V L CNN
-F1 "Device_Q_PMOS_DGS" 200 -50 50 H V L CNN
-F2 "" 200 100 50 H I C CNN
-F3 "" 0 0 50 H I C CNN
-DRAW
-C 65 0 111 0 1 10 N
-C 100 -70 11 0 1 0 F
-C 100 70 11 0 1 0 F
-P 2 0 1 0 2 0 10 0 N
-P 2 0 1 0 30 -70 100 -70 N
-P 2 0 1 10 30 -50 30 -90 N
-P 2 0 1 0 30 0 100 0 N
-P 2 0 1 10 30 20 30 -20 N
-P 2 0 1 0 30 70 100 70 N
-P 2 0 1 10 30 90 30 50 N
-P 2 0 1 0 100 -70 100 -100 N
-P 2 0 1 0 100 -70 100 0 N
-P 2 0 1 0 100 100 100 70 N
-P 3 0 1 10 10 75 10 -75 10 -75 N
-P 4 0 1 0 90 0 50 -15 50 15 90 0 F
-P 4 0 1 0 100 -70 130 -70 130 70 100 70 N
-P 4 0 1 0 110 -20 115 -15 145 -15 150 -10 N
-P 4 0 1 0 130 -15 115 10 145 10 130 -15 N
-X D 1 100 200 100 D 50 50 1 1 P
-X G 2 -200 0 200 R 50 50 1 1 I
-X S 3 100 -200 100 U 50 50 1 1 P
-ENDDRAW
-ENDDEF
-#
-# Device_R
-#
-DEF Device_R R 0 0 N Y 1 F N
+DEF Device:R R 0 0 N Y 1 F N
 F0 "R" 80 0 50 V V C CNN
-F1 "Device_R" 0 0 50 V V C CNN
+F1 "Device:R" 0 0 50 V V C CNN
 F2 "" -70 0 50 V I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -282,31 +250,11 @@ X ~ 2 0 -150 50 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Device_R_POT
+# Device:R_Small
 #
-DEF Device_R_POT RV 0 40 Y N 1 F N
-F0 "RV" -175 0 50 V V C CNN
-F1 "Device_R_POT" -100 0 50 V V C CNN
-F2 "" 0 0 50 H I C CNN
-F3 "" 0 0 50 H I C CNN
-$FPLIST
- Potentiometer*
-$ENDFPLIST
-DRAW
-S 40 100 -40 -100 0 1 10 N
-P 2 0 1 0 100 0 60 0 N
-P 4 0 1 0 45 0 90 20 90 -20 45 0 F
-X 1 1 0 150 50 D 50 50 1 1 P
-X 2 2 150 0 50 L 50 50 1 1 P
-X 3 3 0 -150 50 U 50 50 1 1 P
-ENDDRAW
-ENDDEF
-#
-# Device_R_Small
-#
-DEF Device_R_Small R 0 10 N N 1 F N
+DEF Device:R_Small R 0 10 N N 1 F N
 F0 "R" 30 20 50 H V L CNN
-F1 "Device_R_Small" 30 -40 50 H V L CNN
+F1 "Device:R_Small" 30 -40 50 H V L CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -319,11 +267,11 @@ X ~ 2 0 -100 30 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Device_Speaker
+# Device:Speaker
 #
-DEF Device_Speaker LS 0 0 Y N 1 F N
+DEF Device:Speaker LS 0 0 Y N 1 F N
 F0 "LS" 50 225 50 H V R CNN
-F1 "Device_Speaker" 50 150 50 H V R CNN
+F1 "Device:Speaker" 50 150 50 H V R CNN
 F2 "" 0 -200 50 H I C CNN
 F3 "" -10 -50 50 H I C CNN
 DRAW
@@ -334,11 +282,11 @@ X 2 2 -200 -100 100 R 50 50 1 1 I
 ENDDRAW
 ENDDEF
 #
-# Gun-board-rescue_+3.3V-custom_power
+# Gun-board-rescue:+3.3V-custom_power
 #
-DEF Gun-board-rescue_+3.3V-custom_power #PWR 0 0 Y Y 1 F P
+DEF Gun-board-rescue:+3.3V-custom_power #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -150 50 H I C CNN
-F1 "Gun-board-rescue_+3.3V-custom_power" 0 140 50 H V C CNN
+F1 "Gun-board-rescue:+3.3V-custom_power" 0 140 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -349,26 +297,11 @@ X +3V3 1 0 0 0 U 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# Gun-board-rescue_+3V-custom_power-Gun-board-rescue-Gun-board-rescue
+# Gun-board-rescue:+5V-custom_power
 #
-DEF Gun-board-rescue_+3V-custom_power-Gun-board-rescue-Gun-board-rescue #PWR 0 0 Y Y 1 F P
+DEF Gun-board-rescue:+5V-custom_power #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -150 50 H I C CNN
-F1 "Gun-board-rescue_+3V-custom_power-Gun-board-rescue-Gun-board-rescue" 0 140 50 H V C CNN
-F2 "" 0 0 50 H I C CNN
-F3 "" 0 0 50 H I C CNN
-DRAW
-P 2 0 1 0 -30 50 0 100 N
-P 2 0 1 0 0 0 0 100 N
-P 2 0 1 0 0 100 30 50 N
-X +4V 1 0 0 0 U 50 50 1 1 W N
-ENDDRAW
-ENDDEF
-#
-# Gun-board-rescue_+5V-custom_power
-#
-DEF Gun-board-rescue_+5V-custom_power #PWR 0 0 Y Y 1 F P
-F0 "#PWR" 0 -150 50 H I C CNN
-F1 "Gun-board-rescue_+5V-custom_power" 0 140 50 H V C CNN
+F1 "Gun-board-rescue:+5V-custom_power" 0 140 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -379,11 +312,11 @@ X +5V 1 0 0 0 U 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# Gun-board-rescue_AAT1217-aat1217.lib-Gun-board-rescue-Gun-board-rescue
+# Gun-board-rescue:AAT1217-aat1217.lib-Gun-board-rescue-Gun-board-rescue
 #
-DEF Gun-board-rescue_AAT1217-aat1217.lib-Gun-board-rescue-Gun-board-rescue U 0 20 Y Y 1 F N
+DEF Gun-board-rescue:AAT1217-aat1217.lib-Gun-board-rescue-Gun-board-rescue U 0 20 Y Y 1 F N
 F0 "U" -300 -575 50 H V L CNN
-F1 "Gun-board-rescue_AAT1217-aat1217.lib-Gun-board-rescue-Gun-board-rescue" 75 -575 50 H V L CNN
+F1 "Gun-board-rescue:AAT1217-aat1217.lib-Gun-board-rescue-Gun-board-rescue" 75 -575 50 H V L CNN
 F2 "SOT23-6" 0 -250 60 H I C CNN
 F3 "" -600 -600 60 H V C CNN
 $FPLIST
@@ -400,11 +333,11 @@ X VIN 6 -400 -150 100 R 40 50 1 1 W
 ENDDRAW
 ENDDEF
 #
-# Gun-board-rescue_GND-custom_power
+# Gun-board-rescue:GND-custom_power
 #
-DEF Gun-board-rescue_GND-custom_power #PWR 0 0 Y Y 1 F P
+DEF Gun-board-rescue:GND-custom_power #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -250 50 H I C CNN
-F1 "Gun-board-rescue_GND-custom_power" 0 -150 50 H V C CNN
+F1 "Gun-board-rescue:GND-custom_power" 0 -150 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -413,11 +346,11 @@ X GND 1 0 0 0 D 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# Gun-board-rescue_GND-custom_power-Gun-board-rescue-Gun-board-rescue
+# Gun-board-rescue:GND-custom_power-Gun-board-rescue-Gun-board-rescue
 #
-DEF Gun-board-rescue_GND-custom_power-Gun-board-rescue-Gun-board-rescue #PWR 0 0 Y Y 1 F P
+DEF Gun-board-rescue:GND-custom_power-Gun-board-rescue-Gun-board-rescue #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -250 50 H I C CNN
-F1 "Gun-board-rescue_GND-custom_power-Gun-board-rescue-Gun-board-rescue" 0 -150 50 H V C CNN
+F1 "Gun-board-rescue:GND-custom_power-Gun-board-rescue-Gun-board-rescue" 0 -150 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -426,39 +359,11 @@ X GND 1 0 0 0 D 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# Gun-board-rescue_MCP4018-custom_components
+# Gun-board-rescue:MCP4725-custom_components
 #
-DEF Gun-board-rescue_MCP4018-custom_components U 0 40 Y Y 1 F N
-F0 "U" 0 350 50 H V C CNN
-F1 "Gun-board-rescue_MCP4018-custom_components" 0 250 50 H V C CNN
-F2 "" 0 350 50 H I C CNN
-F3 "" 0 350 50 H I C CNN
-DRAW
-S -250 150 250 -150 0 1 0 f
-P 2 0 1 0 0 -100 -250 -100 N
-P 2 0 1 0 0 100 250 100 N
-P 2 0 1 0 250 0 100 0 N
-P 2 1 1 0 0 -90 0 -100 N
-P 2 1 1 0 0 100 0 90 N
-P 2 1 1 0 100 0 60 0 N
-P 4 1 1 0 45 0 90 20 90 -20 45 0 F
-P 5 1 1 0 0 -30 40 -45 0 -60 -40 -75 0 -90 N
-P 5 1 1 0 0 30 40 15 0 0 -40 -15 0 -30 N
-P 5 1 1 0 0 90 40 75 0 60 -40 45 0 30 N
-X VDD 1 -350 100 100 R 50 50 1 1 W
-X VSS 2 -350 -100 100 R 50 50 1 1 W
-X SCL 3 -350 0 100 R 50 50 1 1 I
-X SDA 4 350 -100 100 L 50 50 1 1 I
-X W 5 350 0 100 L 50 50 1 1 O
-X A 6 350 100 100 L 50 50 1 1 W
-ENDDRAW
-ENDDEF
-#
-# Gun-board-rescue_MCP4725-custom_components
-#
-DEF Gun-board-rescue_MCP4725-custom_components U 0 40 Y Y 1 F N
+DEF Gun-board-rescue:MCP4725-custom_components U 0 40 Y Y 1 F N
 F0 "U" 0 200 50 H V C CNN
-F1 "Gun-board-rescue_MCP4725-custom_components" 0 300 50 H V C CNN
+F1 "Gun-board-rescue:MCP4725-custom_components" 0 300 50 H V C CNN
 F2 "" 0 200 50 H I C CNN
 F3 "" 0 200 50 H I C CNN
 DRAW
@@ -472,44 +377,11 @@ X A0 6 -350 100 100 R 50 50 1 1 I
 ENDDRAW
 ENDDEF
 #
-# Gun-board-rescue_Micro_SD_Card-Connector
+# Gun-board-rescue:STM32F030F4Px-MCU_ST_STM32F0-Gun-board-rescue
 #
-DEF Gun-board-rescue_Micro_SD_Card-Connector J 0 40 Y Y 1 F N
-F0 "J" -650 600 50 H V C CNN
-F1 "Gun-board-rescue_Micro_SD_Card-Connector" 650 600 50 H V R CNN
-F2 "" 1150 300 50 H I C CNN
-F3 "" 0 0 50 H I C CNN
-$FPLIST
- microSD*
-$ENDFPLIST
-DRAW
-S -300 -375 -200 -425 0 1 0 F
-S -300 -275 -200 -325 0 1 0 F
-S -300 -175 -200 -225 0 1 0 F
-S -300 -75 -200 -125 0 1 0 F
-S -300 25 -200 -25 0 1 0 F
-S -300 125 -200 75 0 1 0 F
-S -300 225 -200 175 0 1 0 F
-S -300 325 -200 275 0 1 0 F
-P 6 0 1 10 650 500 650 550 -750 550 -750 -650 650 -650 650 -450 N
-P 11 0 1 10 -350 -450 -350 350 -50 350 100 500 150 500 150 450 250 450 300 500 800 500 800 -450 -350 -450 f
-X DAT2 1 -900 300 150 R 50 50 1 1 B
-X DAT3/CD 2 -900 200 150 R 50 50 1 1 B
-X CMD 3 -900 100 150 R 50 50 1 1 I
-X VDD 4 -900 0 150 R 50 50 1 1 W
-X CLK 5 -900 -100 150 R 50 50 1 1 I
-X VSS 6 -900 -200 150 R 50 50 1 1 W
-X DAT0 7 -900 -300 150 R 50 50 1 1 B
-X DAT1 8 -900 -400 150 R 50 50 1 1 B
-X SHIELD 9 800 -600 150 L 50 50 1 1 P
-ENDDRAW
-ENDDEF
-#
-# Gun-board-rescue_STM32F030F4Px-MCU_ST_STM32F0-Gun-board-rescue
-#
-DEF Gun-board-rescue_STM32F030F4Px-MCU_ST_STM32F0-Gun-board-rescue U 0 20 Y Y 1 F N
+DEF Gun-board-rescue:STM32F030F4Px-MCU_ST_STM32F0-Gun-board-rescue U 0 20 Y Y 1 F N
 F0 "U" -400 650 50 H V L CNN
-F1 "Gun-board-rescue_STM32F030F4Px-MCU_ST_STM32F0-Gun-board-rescue" 200 650 50 H V L CNN
+F1 "Gun-board-rescue:STM32F030F4Px-MCU_ST_STM32F0-Gun-board-rescue" 200 650 50 H V L CNN
 F2 "Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm" -400 -700 50 H I R CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -540,11 +412,34 @@ X PA3 9 500 200 100 L 50 50 1 1 B
 ENDDRAW
 ENDDEF
 #
-# RF_NRF24L01_Breakout
+# Memory_Flash:M25PX32-VMW
 #
-DEF RF_NRF24L01_Breakout U 0 40 Y Y 1 F N
+DEF Memory_Flash:M25PX32-VMW U 0 40 Y Y 1 F N
+F0 "U" -400 400 50 H V C CNN
+F1 "Memory_Flash:M25PX32-VMW" 300 -400 50 H V C CNN
+F2 "Package_SO:SOIJ-8_5.3x5.3mm_P1.27mm" 650 50 50 H I C CNN
+F3 "" 150 -100 50 H I C CNN
+$FPLIST
+ SOIJ*5.3x5.3mm*P1.27mm*
+$ENDFPLIST
+DRAW
+S -450 350 450 -350 0 1 10 f
+X S# 1 -600 0 150 R 50 50 1 1 I I
+X DQ1 2 600 200 150 L 50 50 1 1 B
+X W#/VPP 3 -600 -100 150 R 50 50 1 1 I I
+X VSS 4 0 -500 150 U 50 50 1 1 W
+X DQ0 5 -600 200 150 R 50 50 1 1 B
+X C 6 -600 100 150 R 50 50 1 1 I
+X HOLD# 7 -600 -200 150 R 50 50 1 1 I I
+X VCC 8 0 500 150 D 50 50 1 1 W
+ENDDRAW
+ENDDEF
+#
+# RF:NRF24L01_Breakout
+#
+DEF RF:NRF24L01_Breakout U 0 40 Y Y 1 F N
 F0 "U" -350 500 50 H V L CNN
-F1 "RF_NRF24L01_Breakout" 150 500 50 H V L CNN
+F1 "RF:NRF24L01_Breakout" 150 500 50 H V L CNN
 F2 "RF_Module:nRF24L01_Breakout" 150 600 50 H I L CIN
 F3 "" 0 -100 50 H I C CNN
 $FPLIST
@@ -556,6 +451,7 @@ A 175 101 49 900 -11 0 1 10 N 175 150 225 100
 A 175 101 78 1087 -191 0 1 10 N 150 175 250 75
 C 175 100 25 0 1 10 F
 S -350 450 350 -450 0 1 10 f
+S 450 -750 450 -750 0 1 0 N
 P 2 0 1 10 175 75 175 -50 N
 X GND 1 0 -600 150 U 50 50 1 1 W
 X VCC 2 0 600 150 D 50 50 1 1 W
@@ -568,34 +464,30 @@ X IRQ 8 -500 -300 150 R 50 50 1 1 O
 ENDDRAW
 ENDDEF
 #
-# Regulator_Linear_LM317_3PinPackage
+# Regulator_Linear:AMS1117
 #
-DEF Regulator_Linear_LM317_3PinPackage U 0 10 Y Y 1 F N
+DEF Regulator_Linear:AMS1117 U 0 30 Y Y 1 F N
 F0 "U" -150 125 50 H V C CNN
-F1 "Regulator_Linear_LM317_3PinPackage" 0 125 50 H V L CNN
-F2 "" 0 250 50 H I C CIN
-F3 "" 0 0 50 H I C CNN
-ALIAS AZ1117-ADJ
+F1 "Regulator_Linear:AMS1117" 0 125 50 H V L CNN
+F2 "Package_TO_SOT_SMD:SOT-223-3_TabPin2" 0 200 50 H I C CNN
+F3 "" 100 -250 50 H I C CNN
+ALIAS NCP1117-ADJ_SOT223 AMS1117
 $FPLIST
- SOT?223*
- SOT?89*
- TO?220*
- TO?252*
- TO?263*
+ SOT?223*TabPin2*
 $ENDFPLIST
 DRAW
-S -200 75 200 -200 0 1 10 f
+S -200 -200 200 75 0 1 10 f
 X ADJ 1 0 -300 100 U 50 50 1 1 I
 X VO 2 300 0 100 L 50 50 1 1 w
 X VI 3 -300 0 100 R 50 50 1 1 W
 ENDDRAW
 ENDDEF
 #
-# Switch_SW_SPST
+# Switch:SW_SPST
 #
-DEF Switch_SW_SPST SW 0 0 Y N 1 F N
+DEF Switch:SW_SPST SW 0 0 Y N 1 F N
 F0 "SW" 0 125 50 H V C CNN
-F1 "Switch_SW_SPST" 0 -100 50 H V C CNN
+F1 "Switch:SW_SPST" 0 -100 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -607,11 +499,11 @@ X B 2 200 0 100 L 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Transistor_BJT_2N3904
+# Transistor_BJT:2N3904
 #
-DEF Transistor_BJT_2N3904 Q 0 0 Y N 1 F N
+DEF Transistor_BJT:2N3904 Q 0 0 Y N 1 F N
 F0 "Q" 200 75 50 H V L CNN
-F1 "Transistor_BJT_2N3904" 200 0 50 H V L CNN
+F1 "Transistor_BJT:2N3904" 200 0 50 H V L CNN
 F2 "Package_TO_SOT_THT:TO-92_Inline" 200 -75 50 H I L CIN
 F3 "" 0 0 50 H I L CNN
 $FPLIST
@@ -629,11 +521,11 @@ X C 3 100 200 100 D 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# power_+3.3V
+# power:+3.3V
 #
-DEF power_+3.3V #PWR 0 0 Y Y 1 F P
+DEF power:+3.3V #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -150 50 H I C CNN
-F1 "power_+3.3V" 0 140 50 H V C CNN
+F1 "power:+3.3V" 0 140 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 ALIAS +3.3V
@@ -645,11 +537,11 @@ X +3V3 1 0 0 0 U 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# power_+5V
+# power:+5V
 #
-DEF power_+5V #PWR 0 0 Y Y 1 F P
+DEF power:+5V #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -150 50 H I C CNN
-F1 "power_+5V" 0 140 50 H V C CNN
+F1 "power:+5V" 0 140 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -660,11 +552,11 @@ X +5V 1 0 0 0 U 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# power_+BATT
+# power:+BATT
 #
-DEF power_+BATT #PWR 0 0 Y Y 1 F P
+DEF power:+BATT #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -150 50 H I C CNN
-F1 "power_+BATT" 0 140 50 H V C CNN
+F1 "power:+BATT" 0 140 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -675,11 +567,11 @@ X +BATT 1 0 0 0 U 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# power_GND
+# power:GND
 #
-DEF power_GND #PWR 0 0 Y Y 1 F P
+DEF power:GND #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -250 50 H I C CNN
-F1 "power_GND" 0 -150 50 H V C CNN
+F1 "power:GND" 0 -150 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -688,11 +580,11 @@ X GND 1 0 0 0 D 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# power_VDD
+# power:VDD
 #
-DEF power_VDD #PWR 0 0 Y Y 1 F P
+DEF power:VDD #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -150 50 H I C CNN
-F1 "power_VDD" 0 150 50 H V C CNN
+F1 "power:VDD" 0 150 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -702,11 +594,11 @@ X VDD 1 0 0 0 U 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# power_VDDA
+# power:VDDA
 #
-DEF power_VDDA #PWR 0 0 Y Y 1 F P
+DEF power:VDDA #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -150 50 H I C CNN
-F1 "power_VDDA" 0 150 50 H V C CNN
+F1 "power:VDDA" 0 150 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
