@@ -1083,7 +1083,7 @@
   )
 
   (module Capacitor_SMD:C_0805_2012Metric (layer B.Cu) (tedit 5B36C52B) (tstamp 5CF73AA9)
-    (at 152.4 60.96 270)
+    (at 166.37 57.15 270)
     (descr "Capacitor SMD 0805 (2012 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: https://docs.google.com/spreadsheets/d/1BsfQQcO9C6DZCsRaXUlFlo91Tg2WpOkGARC1WS5S8t0/edit?usp=sharing), generated with kicad-footprint-generator")
     (tags capacitor)
     (path /5CFC5656)
@@ -1294,7 +1294,7 @@
   )
 
   (module Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical (layer F.Cu) (tedit 59FED5CC) (tstamp 5CF73B27)
-    (at 146.05 48.26)
+    (at 59.055 50.8)
     (descr "Through hole straight pin header, 1x05, 2.54mm pitch, single row")
     (tags "Through hole pin header THT 1x05 2.54mm single row")
     (path /5CB83FE6)
@@ -2929,7 +2929,7 @@
   )
 
   (module Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm (layer F.Cu) (tedit 5A02F25C) (tstamp 5CF73ED3)
-    (at 134.62 55.245 270)
+    (at 147.32 53.975 270)
     (descr "20-Lead Plastic Thin Shrink Small Outline (ST)-4.4 mm Body [TSSOP] (see Microchip Packaging Specification 00000049BS.pdf)")
     (tags "SSOP 0.65")
     (path /5CB198C5)
