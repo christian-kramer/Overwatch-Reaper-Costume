@@ -1,8 +1,8 @@
-(kicad_pcb (version 20171130) (host pcbnew "(5.1.0)-1")
+(kicad_pcb (version 20171130) (host pcbnew "(5.0.0)")
 
   (general
     (thickness 1.6)
-    (drawings 52)
+    (drawings 53)
     (tracks 445)
     (zones 0)
     (modules 66)
@@ -39,6 +39,8 @@
     (zone_clearance 0.508)
     (zone_45_only no)
     (trace_min 0.127)
+    (segment_width 0.2)
+    (edge_width 0.15)
     (via_size 0.8)
     (via_drill 0.4)
     (via_min_size 0.6)
@@ -48,8 +50,6 @@
     (uvias_allowed no)
     (uvia_min_size 0.2)
     (uvia_min_drill 0.1)
-    (edge_width 0.15)
-    (segment_width 0.2)
     (pcb_text_width 0.3)
     (pcb_text_size 1.5 1.5)
     (mod_edge_width 0.15)
@@ -3184,6 +3184,9 @@
     (pad 1 np_thru_hole circle (at 0 0) (size 3.2 3.2) (drill 3.2) (layers *.Cu *.Mask))
   )
 
+  (gr_text "Kitty Cosplay\nReaper Costume Gun\n\nREV A01" (at 138.176 50.292 90) (layer F.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify left))
+  )
   (gr_circle (center 123.698 86.487) (end 124.05721 86.487) (layer F.Mask) (width 0.2) (tstamp 5CF974E2))
   (gr_circle (center 120.777 92.73179) (end 121.13621 92.73179) (layer F.Mask) (width 0.2) (tstamp 5CF974E2))
   (gr_circle (center 117.348 88.87821) (end 117.70721 88.87821) (layer F.Mask) (width 0.2) (tstamp 5CF974E2))
