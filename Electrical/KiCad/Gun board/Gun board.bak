@@ -1,6 +1,6 @@
 EESchema Schematic File Version 4
 LIBS:Gun board-cache
-EELAYER 29 0
+EELAYER 26 0
 EELAYER END
 $Descr USLetter 11000 8500
 encoding utf-8
@@ -144,7 +144,7 @@ U 1 1 5CB2C71B
 P 1450 800
 F 0 "L1" V 1640 800 50  0000 C CNN
 F 1 "4.7μH" V 1549 800 50  0000 C CNN
-F 2 "Inductor_SMD:L_10.4x10.4_H4.8" H 1450 800 50  0001 C CNN
+F 2 "Inductor_SMD:L_TracoPower_TCK-141" H 1450 800 50  0001 C CNN
 F 3 "~" H 1450 800 50  0001 C CNN
 	1    1450 800 
 	0    -1   -1   0   
@@ -177,7 +177,7 @@ U 1 1 5CC0AE10
 P 1900 7150
 F 0 "LD3" H 1850 7435 50  0000 C CNN
 F 1 "Laserdiode_1C2A" H 1850 7344 50  0000 C CNN
-F 2 "Connector_JST:JST_PH_S2B-PH-K_1x02_P2.00mm_Horizontal" H 1800 7125 50  0001 C CNN
+F 2 "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical" H 1800 7125 50  0001 C CNN
 F 3 "~" H 1930 6950 50  0001 C CNN
 	1    1900 7150
 	0    -1   -1   0   
@@ -188,7 +188,7 @@ U 1 1 5CC0CA56
 P 1400 7150
 F 0 "LD2" H 1350 7435 50  0000 C CNN
 F 1 "Laserdiode_1C2A" H 1350 7344 50  0000 C CNN
-F 2 "Connector_JST:JST_PH_S2B-PH-K_1x02_P2.00mm_Horizontal" H 1300 7125 50  0001 C CNN
+F 2 "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical" H 1300 7125 50  0001 C CNN
 F 3 "~" H 1430 6950 50  0001 C CNN
 	1    1400 7150
 	0    -1   -1   0   
@@ -199,7 +199,7 @@ U 1 1 5CC0DDCC
 P 2400 7150
 F 0 "LD4" H 2350 7435 50  0000 C CNN
 F 1 "Laserdiode_1C2A" H 2350 7344 50  0000 C CNN
-F 2 "Connector_JST:JST_PH_S2B-PH-K_1x02_P2.00mm_Horizontal" H 2300 7125 50  0001 C CNN
+F 2 "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical" H 2300 7125 50  0001 C CNN
 F 3 "~" H 2430 6950 50  0001 C CNN
 	1    2400 7150
 	0    -1   -1   0   
@@ -210,7 +210,7 @@ U 1 1 5CC0F410
 P 900 7150
 F 0 "LD1" H 850 7435 50  0000 C CNN
 F 1 "Laserdiode_1C2A" H 850 7344 50  0000 C CNN
-F 2 "Connector_JST:JST_PH_S2B-PH-K_1x02_P2.00mm_Horizontal" H 800 7125 50  0001 C CNN
+F 2 "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical" H 800 7125 50  0001 C CNN
 F 3 "~" H 930 6950 50  0001 C CNN
 	1    900  7150
 	0    -1   -1   0   
@@ -1030,7 +1030,7 @@ U 1 1 5CFCAFA3
 P 2900 7150
 F 0 "LD5" H 2850 7435 50  0000 C CNN
 F 1 "Laserdiode_1C2A" H 2850 7344 50  0000 C CNN
-F 2 "Connector_JST:JST_PH_S2B-PH-K_1x02_P2.00mm_Horizontal" H 2800 7125 50  0001 C CNN
+F 2 "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical" H 2800 7125 50  0001 C CNN
 F 3 "~" H 2930 6950 50  0001 C CNN
 	1    2900 7150
 	0    -1   -1   0   
@@ -1379,9 +1379,9 @@ Wire Wire Line
 	1650 6500 1650 6650
 Text Label 5850 1550 0    50   ~ 0
 TRIGGER
-Text Label 5850 2150 0    50   ~ 0
+Text Label 5850 1450 0    50   ~ 0
 FLASH_CS
-Text Label 5850 2250 0    50   ~ 0
+Text Label 5850 1350 0    50   ~ 0
 RADIO_CS
 Connection ~ 4100 4000
 Wire Wire Line
@@ -1530,8 +1530,6 @@ F 3 "~" H 3650 4000 50  0001 C CNN
 $EndComp
 NoConn ~ 5750 1150
 NoConn ~ 5750 1250
-NoConn ~ 5750 1350
-NoConn ~ 5750 1450
 $Comp
 L Device:R_Small R14
 U 1 1 5D97AF76
@@ -1595,4 +1593,12 @@ Wire Wire Line
 	2100 1250 2100 1400
 Wire Wire Line
 	2100 1400 2150 1400
+Wire Wire Line
+	5750 1350 5850 1350
+Wire Wire Line
+	5750 1450 5850 1450
+Text Label 5850 2150 0    50   ~ 0
+SYS_SWDIO
+Text Label 5850 2250 0    50   ~ 0
+SYS_SWCLK
 $EndSCHEMATC

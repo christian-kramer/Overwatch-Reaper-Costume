@@ -1,6 +1,6 @@
 EESchema Schematic File Version 4
 LIBS:Gun board-cache
-EELAYER 29 0
+EELAYER 26 0
 EELAYER END
 $Descr USLetter 11000 8500
 encoding utf-8
@@ -144,7 +144,7 @@ U 1 1 5CB2C71B
 P 1450 800
 F 0 "L1" V 1640 800 50  0000 C CNN
 F 1 "4.7μH" V 1549 800 50  0000 C CNN
-F 2 "Inductor_SMD:L_10.4x10.4_H4.8" H 1450 800 50  0001 C CNN
+F 2 "Inductor_SMD:L_TracoPower_TCK-141" H 1450 800 50  0001 C CNN
 F 3 "~" H 1450 800 50  0001 C CNN
 	1    1450 800 
 	0    -1   -1   0   
@@ -935,7 +935,7 @@ U 1 1 5CEA6C66
 P 4700 4100
 F 0 "U8" H 5044 4146 50  0000 L CNN
 F 1 "LM386" H 5044 4055 50  0000 L CNN
-F 2 "Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm" H 4800 4200 50  0001 C CNN
+F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 4800 4200 50  0001 C CNN
 F 3 "http://www.ti.com/lit/ds/symlink/lm386.pdf" H 4900 4300 50  0001 C CNN
 	1    4700 4100
 	1    0    0    -1  
@@ -1379,9 +1379,9 @@ Wire Wire Line
 	1650 6500 1650 6650
 Text Label 5850 1550 0    50   ~ 0
 TRIGGER
-Text Label 5850 2150 0    50   ~ 0
+Text Label 5850 1450 0    50   ~ 0
 FLASH_CS
-Text Label 5850 2250 0    50   ~ 0
+Text Label 5850 1350 0    50   ~ 0
 RADIO_CS
 Connection ~ 4100 4000
 Wire Wire Line
@@ -1530,8 +1530,6 @@ F 3 "~" H 3650 4000 50  0001 C CNN
 $EndComp
 NoConn ~ 5750 1150
 NoConn ~ 5750 1250
-NoConn ~ 5750 1350
-NoConn ~ 5750 1450
 $Comp
 L Device:R_Small R14
 U 1 1 5D97AF76
@@ -1595,4 +1593,12 @@ Wire Wire Line
 	2100 1250 2100 1400
 Wire Wire Line
 	2100 1400 2150 1400
+Wire Wire Line
+	5750 1350 5850 1350
+Wire Wire Line
+	5750 1450 5850 1450
+Text Label 5850 2150 0    50   ~ 0
+SYS_SWDIO
+Text Label 5850 2250 0    50   ~ 0
+SYS_SWCLK
 $EndSCHEMATC
