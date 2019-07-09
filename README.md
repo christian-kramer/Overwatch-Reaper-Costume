@@ -43,6 +43,8 @@ I ordered some, and I was blown away at how great it looked with the fiber optic
 
 My phone's camera doesn't do it justice. To the human eye, the light is perceived as very intense red. Not blindingly so, but it definitely looks a whole lot like what the video game shows for the lighting effects! I guess we're using lasers in our project.
 
+A side-note about these laser modules: They're supposed to be supplied with an active constant-current power supply, but I found that a 22Ω resistor was plenty sufficient for stabilizing the current. These are for lighting effects, not scientific measurement.
+
 My next step was to rip an existing solid 3D gun model off of thingiverse and hollow it out to find space for all the parts, and also figure out how to get the trigger to move instead of just being static like on the original model.
 
 After much work figuring out how to make everything fit, and mount securely inside, I came up with this configuration:
@@ -90,7 +92,7 @@ A fairly popular one amongst the hobbyist community, produced in droves in China
 
 ![MCP4725](https://i.imgur.com/9KLXux1.png)
 
-It's a nifty little thing, in the same size package as the AAT1217 (and the PIC10F220, for that matter). 12-Bit Resolution, rail-to-rail output which means it'll give me the full swing of 0v to 3.3v, and it supports High-Speed I2C which is more than enough to cover the 8kHz sample rate plus I2C frame data. Perfect! Now I gotta find an amplifier, because I really don't trust this thing to drive a speaker the size of what I need.
+It's a nifty little thing, in the same size package as the the PIC10F220 I'm so familiar with. 12-Bit Resolution, rail-to-rail output which means it'll give me the full swing of 0v to 3.3v, and it supports High-Speed I2C which is more than enough to cover the 8kHz sample rate plus I2C frame data. Perfect! Now I gotta find an amplifier, because I really don't trust this thing to drive a speaker the size of what I need.
 
 ![LM386](https://i.imgur.com/mErxf0R.png)
 
@@ -143,7 +145,7 @@ The software for it looks like this:
 
 ![CH341A Software](https://i.imgur.com/Min93zT.png)
 
-And I gotta say, after changing the language from Chinese, it was pretty much plug-and-play. The programmer talked to the chip just fine, and I could key-in values at whatever memory addresses I wanted.
+And I gotta say, after changing the language from Chinese, it was pretty much plug-and-play. (With the exception of the diagram in the lower left being WRONG! The chip should be rotated 180 degrees, in that same 8-pin slot.) The programmer talked to the chip just fine, and I could key-in values at whatever memory addresses I wanted.
 
 So... I got the chip to talk to my computer, and store data successfully. But how about reading it from the microcontroller?
 
@@ -169,3 +171,93 @@ On the microcontroller side of things, I tried using another jumper to tie Hold 
 My breadboard prototype now looked like this:
 
 ![BreadBoard Prototype 2](https://i.imgur.com/GSiPe29.jpg)
+
+After uploading a larger WAV file to the flash chip than would fit on the STM32, I tried reading each byte and outputting it to the DAC fast enough to play the voice line. The result was actually pretty promising, and sounded decent considering the mediocre speaker I was using.
+
+Next challenge: the radio.
+
+So, after a cursory glance at what other people are using for their low-cost RF needs for Arduino  projects and whatnot, I was consistently pointed towards the nRF24L01 module.
+
+![nRF24l01](https://i.imgur.com/rt8kVBQ.png)
+
+These are about a buck a pop on Amazon, with Prime shipping included. Interestingly enough, these *also* communicate over SPI... which means I now have to make sure that the MX25L1606EM2I and nRF24L01 will play nice together on the same line. After all, with the Hold pin needing to be tied to ground, which it shouldn't have to be, it very well may not.
+
+See... SPI isn't addressed. You have to expressly tell each chip, "HEY! I'm talking to you." And sometimes, when finished talking to that chip, it won't release the MISO line like it's supposed to, which prevents other chips from talking.
+
+SD Cards are apparently notorious for exhibiting that behavior when operating in SPI mode, so... yeah, I'm glad I didn't use one on this project.
+
+A common workaround for this is to put a device called a "tri-state buffer" on the problem device, which then forcefully disengages the MISO line for that device when the Chip-Select line goes high, thus allowing other devices to talk.
+
+![Bad SPI Design](https://i.imgur.com/qzjuoRX.png)
+
+So the only way to figure out if the MX25L1606EM2I was a problem device, was to try it on the same SPI line as the nRF24L01.
+
+I tacked on a radio module to my breadboard, and whipped up a little battery-powered stand-alone nRF24L01 + STM32 project.
+
+Then, I wrote some code that did the following:
+
+1. Battery-powered module transmits to waiting sound-breadboard module that it should start playing the soundbyte from the flash chip, which is indicated by the blue LED on the sound-breadboard module turning on.
+2. The sound-breadboard module instantly transmits back to the battery-powered module to turn on its LED, indicating that bidirectional communication is possible.
+3. After the soundbyte finishes playing on the sound-breadboard, it instructs the battery-powered module to turn off its LED. This indicates a successful handover from radio, to flash chip, to radio... I.E. both devices are capable of releasing the MISO line without issue.
+2. Once the battery-powered module has turned off its LED, it instantly instructs the sound-breadboard module to do the same.
+
+The result of these four transactions should yield two devices that turn on, and off their LEDs seemingly in perfect synchronization, while also proving that neither device is holding the MOSI line hostage.
+
+And... here it is in action:
+
+![Dual-SPI Device Test](https://i.gyazo.com/60b7cc6970f24641ac8ad5783b88ba2e.gif)
+
+Success! No tri-state buffer needed.
+
+Additionally, to improve sound-quality, I added some more filtering on the output pin. For such low-cost and low-power parts, it was starting to sound *really* good... and loud!
+
+This pretty much constituted the entirety of the project... sound, lights, bidirectional communication... I feel like I'm forgetting something, though.
+
+Oh, right. Power.
+
+Yeah, I forgot... I gotta run *all this* off of just 2 AA batteries. Since I need 3.3v for most of my electronics, and 5v for the LM386, but the AA batteries provide *at most* 3v... I need to boost the voltage somehow.
+
+I did some digging for any battery-management chips that may exist, that are cheap enough for my project... and stumbled upon a magical unicorn called the AAT1217.
+
+![AAT1217](https://i.imgur.com/S2SwO92.png)
+
+![AAT1217 Datasheet](https://i.imgur.com/5wn1KTX.png)
+
+![AAT1217 Datasheet 2](https://i.imgur.com/ch8ScIz.png)
+
+Easy-to-use with just 6 pins, an external inductor, and some resistors to set the output voltage (and an external schottky diode if you're setting it above 4.5v), this baby will squeeze every last drop of juice out of your choice of either a single AA battery, two AA batteries, or a single disposable Lithium-Ion battery, with up to 93% efficiency... all in the same package as the PIC10F220 and the MCP4725. Perfect!
+
+My strategy was to set this to 5v to supply the LM386 with what it needs, and then use a linear regulator to step it back down to 3.3v. In the grand scheme of things, that's a trivial change, and any regulator worth its salt should be able to handle that with almost no energy loss.
+
+My regulator of choice: AMS1117
+
+![AAT1217](https://i.imgur.com/2m4OYB5.png)
+
+Funny enough, these things are in the dev boards I ordered... as well  as like, every Arduino ever made. Pretty common, and very cheap!
+
+With all this planned out, I set to work creating the schematic for the whole circuit board. Something I made sure to include was a jumper to cut power to all the lasers, so that I could completely remove the risk of damaging my eyes when I was working on the board.
+
+![Schematic](https://i.imgur.com/VcaJFKA.png)
+
+Dang, that's a whole lot more complicated than my first board design. Time to lay it out!
+
+![Layout](https://i.imgur.com/sYl77Tk.png)
+
+I tried to compartmentalize different parts... power in the lower right, audio amplifier in the top right, all the connectors on the right edge so they point towards the back of the gun... laser holder on the bottom, with 3mm drill holes... 5 connectors, all in a row for the 5 lasers, with the one that can be blinked marked with a \*. I had trouble routing all the traces away from the STM32, so I flipped it to the backside of the board and broke it out with a bunch of vias, so I had enough room to work.
+
+
+After a few weeks, the boards arrived in the mail:
+
+![Board Front](https://i.imgur.com/lXZsfVa.jpg)
+
+![Board Back](https://i.imgur.com/spZVPAC.jpg)
+
+Fun fact: Matte Black doesn't cost any more than Green, at JLCPCB. Man, it looks good! And the CK is so shiny...
+
+Because these boards are so complex, and I never tested the AAT1217 before designing it in... I decided it would be best to assemble this in parts, starting with the lower right power circuitry and the lasers.
+
+![First Assembly](https://i.imgur.com/kZW6N1i.jpg)
+
+And... Hey! It works!
+
+This was with fresh batteries, supplying very nearly 3v... But for fun, I tested this with batteries that wouldn't even run my analog wall clock, and the laser powered up just fine at the same brightness as the fresh batteries. Whether or not the amplifier will still work with batteries this dead remains to be seen.
