@@ -15,7 +15,7 @@ Specifically, Reaper's dual shotguns. The requirements were:
 
 1. All the red lights on the guns *(two spots underneath the barrel, one on the side-switch, one on the front underneath the barrels, and one near the top of the gun facing backwards towards Reaper)* need to be illuminated with a lighting effect accurate to the in-game look.
 2. The barrels need to illuminate when the trigger is pulled, to mimic shots being fired.
-3. Sound effects of a shot firing need to play every time the trigger is pulled, with no more than 4 shots per gun firing before the "reload" sound effect is played. Both guns need to reload at the same time, so if one is empty before the other, it needs to wait for the last shot to be fired from the other gun. Additionally, a voice line Reaper says in the video game after a kill need to play during the reload... making sure to play a different voice line each time.
+3. Sound effects of a shot firing need to play every time the trigger is pulled, with no more than 4 shots per gun firing before the "reload" sound effect is played. Both guns need to reload at the same time, so if one is empty before the other, it needs to wait for the last shot to be fired from the other gun. Additionally, voice lines Reaper says in the video game after a kill need to play during the reload... making sure to play a different voice line each time.
 4. Power is to be provided by two AA batteries per gun, due to space constraints in the handle.
 
 So... Logically, thinking about this, I know I need some lights, a speaker, a radio, a microcontroller fast enough to handle the task of producing sound somehow, and a circuit board to hold everything together.
@@ -64,7 +64,7 @@ Now we're talking! It's not even in a quad flat package, it's dual-inline with o
 
 ![CubeMX](https://i.imgur.com/QxeYHbS.png)
 
-Actually, not bad! It's got an ADC, support for *both* I2C and SPI, 5 timers plus a watchdog timer, and a real-time clock. Not bad for a 20-pin part. I think we have a winner for our microcontroller.
+Actually, not bad! It's got an ADC, support for *both* I2C and SPI, 5 general-purpose timers plus a watchdog timer, and a real-time clock. Not bad for a 20-pin part. I think we have a winner for our microcontroller.
 
 Also, as a bonus, dev boards are dirt-cheap.
 
@@ -74,15 +74,15 @@ Alright, I think now's a good time to tackle the hard part: sound.
 
 I know that I use file formats like WAV and MP3 to store sound on my PC, but is any of that readable to a microcontroller of this simplicity? I needed to learn a lot more about how these formats work under the hood, and how other people have gone about playing sound on devices like the Arduino.
 
-Apparently, since a WAV file is uncompressed, it represents what is called "PCM Audio", or "Pulse-Code Modulation Audio". This means that the bytes in a WAV file sequentially represent amplitude data of the audio waveform - the thing you see when you open something in Audacity or the like. Depending on the sample rate and resolution, this can be as simple as one byte representing an aplitude of anywhere from 0 to 255, played one after the other, 8000 times per second for an 8-bit, 8Khz audio file.
+Apparently, since a WAV file is uncompressed, it represents what is called "PCM Audio", or "Pulse-Code Modulation Audio". This means that the bytes in a WAV file sequentially represent amplitude data of the audio waveform - the thing you see when you open something in Audacity or the like. Depending on the sample rate and resolution, this can be as simple as one byte representing an aplitude of anywhere from 0 to 255, played one after the other, 8000 times per second for an 8-bit, 8kHz audio file.
 
 Here's a good visualization:
 
 ![Sampling](https://i.imgur.com/vSnqeyg.png)
 
-Each line is 1/8000 of a second apart (sample rate of 8Khz) and the value at each line can be anywhere from 0 to 255 (8-bit resolution). Turn those numbers into voltages that move a speaker cone, and baby, you've got audio.
+Each line is 1/8000 of a second apart (sample rate of 8kHz) and the value at each line can be anywhere from 0 to 255 (8-bit resolution). Turn those numbers into voltages that move a speaker cone, and baby, you've got audio.
 
-Now the heck do I get this thing to talk to a speaker? It certainly doesn't do so natively, like the STM32F407 does... gotta figure that one out on my own. Somehow, I need to get that waveform out to an amplifier. Most times, that's done with something called a Digital to Analog converter, or DAC, which you'll hear thrown around on various products' descriptions. But in the spirit of bare-minimum, I tried to see if I could use Pulse-Width Modulation combined with a filtering circuit to create the analog waves.
+Now how the heck do I get this thing to talk to a speaker? It certainly doesn't do so natively, like the STM32F407 does... gotta figure that one out on my own. Somehow, I need to get that waveform out to an amplifier. Most times, that's done with something called a Digital to Analog converter, or DAC, which you'll hear thrown around on various products' descriptions. But in the spirit of bare-minimum, I tried to see if I could use Pulse-Width Modulation combined with a filtering circuit to create the analog waves.
 
 I'm just going to say right now, that I couldn't get that to work no matter how hard I tried. I'm going to have to bookmark that technique for later. For now, I'm saying "screw it" and using a DAC. But which DAC should I use?
 
@@ -90,7 +90,7 @@ A fairly popular one amongst the hobbyist community, produced in droves in China
 
 ![MCP4725](https://i.imgur.com/9KLXux1.png)
 
-It's a nifty little thing, in the same size package as the AAT1217 (and the PIC10F220, for that matter). 12-Bit Resolution, rail-to-rail output which means it'll give me the full swing of 0v to 3.3v, and it supports High-Speed I2C which is more than enough to cover the 8Khz sample rate plus I2C frame data. Perfect! Now I gotta find an amplifier, because I really don't trust this thing to drive a speaker the size of what I need.
+It's a nifty little thing, in the same size package as the AAT1217 (and the PIC10F220, for that matter). 12-Bit Resolution, rail-to-rail output which means it'll give me the full swing of 0v to 3.3v, and it supports High-Speed I2C which is more than enough to cover the 8kHz sample rate plus I2C frame data. Perfect! Now I gotta find an amplifier, because I really don't trust this thing to drive a speaker the size of what I need.
 
 ![LM386](https://i.imgur.com/mErxf0R.png)
 
@@ -107,7 +107,65 @@ A common tactic for scaling an analog signal like this is to use two resistors i
 ![LM386](https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Impedance_voltage_divider.svg/220px-Impedance_voltage_divider.svg.png)
 
 
-If we want 3.3v (the upper limit of the DAC) to correspond with 0.4v (the upper limit of the amplifier input), and we start with a known resistor value of 150KΩ for Z1 (because that's a standard resistor value that I know is produced), we get a nominal Z2 value of 20.69KΩ, which is not a standard resistor that is produced. Luckily, 20KΩ is, and that's "close enough for government work."
+If we want 3.3v (the upper limit of the DAC) to correspond with 0.4v (the upper limit of the amplifier input), and we start with a known resistor value of 150kΩ for Z1 (because that's a standard resistor value that I know is produced), we get a nominal Z2 value of 20.69kΩ, which is not a standard resistor that is produced. Luckily, 20kΩ is, and that's "close enough for government work."
 
-I'd also like to explain why I'm choosing resistors in this range of values... the answer, is because I just need a voltage reference for the LM386. I don't want to waste unnecessary current heating up resistors, but I also don't want so much resistance that the voltage reference isn't responsive enough for my purposes. These are in a sweet spot between both.
+I'd also like to explain why I'm choosing resistors in this range of values... the answer, is because I just need a voltage reference for the LM386. I don't want to waste unnecessary battery power heating up resistors, but I also don't want so much resistance that the voltage reference isn't responsive enough for my purposes. These are in a sweet spot between both.
 
+So after all of my dev boards arrived in the mail, and I pulled an LM386 out of an old door alarm, I ended up building this:
+
+![BreadBoard Prototype 1](https://i.imgur.com/020LDsc.png)
+
+The STM32 communicates over High-Speed I2C to the MCP4725, which outputs the PCM WAV file to voltages anywhere between 0 to 3.3v depending on the wave amplitude at that "frame" of the sound file. That 0 to 3.3v signal gets coupled to the voltage divider in the reverse-"L" shape by a 10nF capacitor to help smooth out the "jumps" in the 8kHz audio, then finally gets sent to the LM386 input pin. The LM386 output pin gets coupled to the 8Ω speaker by a pretty big capacitor. Here, I'm using a 330µF electrolytic to remove the DC bias from the amplifier, so the speaker cone goes through its whole range of motion. Additionally, I put a high-pass filter on the output pin to chop off some unwanted low-frequency noise.
+
+The sound file itself is stored on the STM32, compiled from a C character array that I just iterate through 8000 times per second in a for loop.
+
+Unfortunately, due to how small the storage on-board the STM32 is, I found only one voice line of Reaper's that was short enough to fit on it! In order to store *all*  of them, I'm going to need some external storage.
+
+I thought to myself... "Hm... flash storage has been getting pretty dense and cheap, lately. I wonder what kind of chips are out there that might store the amount of data I'm looking for."
+
+I looked into Micro SD Cards, but even for a 2GB card it took over 100 milliamps! Holy cow, I don't have that kind of overhead with these two AA batteries! And 2GB is *way* overkill for what I need. I had to find something smaller, and lower-power.
+
+Eventually, my friend ended up finding this:
+
+![MX25L1606EM2I](https://i.imgur.com/L25Tetp.png)
+
+The Macronix MX25L1606EM2I, a 2MB SPI flash chip capable of exchanging data at very high speeds, at very low power. The cool thing about SPI flash chips is that their form factor is pretty much standardized, as well as their pinout and (for the most part) their instruction set... so in the future, if I theoretically wanted to switch out this chip for a larger one, or a different manufacturer, it should be a drop-in replacement. Pretty convenient!
+
+But unlike a Micro SD Card, I can't just plop this into my PC and drag files onto it... This is just bare memory, I needed to be able to talk to it somehow.
+
+Looking around on eBay, I found a pretty highly-rated Flash IC programmer that supported both SPI and I2C chips called the CH341A.
+
+![CH341A](https://i.imgur.com/Z1JP25S.png)
+
+The MX25L1606EM2I can't plug directly into the ZFI socket on the programmer, so I made sure to find one that included this little "clamp" to hold onto the 8 pins of the flash chip.
+
+The software for it looks like this:
+
+![CH341A Software](https://i.imgur.com/Min93zT.png)
+
+And I gotta say, after changing the language from Chinese, it was pretty much plug-and-play. The programmer talked to the chip just fine, and I could key-in values at whatever memory addresses I wanted.
+
+So... I got the chip to talk to my computer, and store data successfully. But how about reading it from the microcontroller?
+
+Reading into the datasheet, the command structure for reading from the chip is:
+
+1. Pull the Chip-Select pin low.
+2. Send it `0x03` in the first byte of data. This is to instruct the chip that we intend to read from it, and we are about to give it an address in the next 3 frames.
+2. Send it the first byte of the 6-byte address.
+3. Send it the second byte of the 6-byte address.
+4. Send it the third byte of the 6-byte address. Note: after these are all sent, the chip will start reading off not only that byte, but every consecutive byte until it reaches the end.
+5. Finally tell it to shut up by pulling the Chip-Select pin high.
+
+And that, in theory, should work. There's two other pins on the chip that are of interest: Write-Protect, and Hold. Write-Protect does what you'd expect, and Hold stops the entire chip from doing anything. From my adventures diving into EE forums, I learned that those pins aren't necessary for normal operation, and can just be left unconnected.
+
+But... when I tried reading a memory address on the flash chip from the STM32, it wouldn't respond! I was getting no data back at all!
+
+So, to troubleshoot, I hooked the chip back up to the CH341A, but this time using DuPont jumper wires, and verified that it could talk to the PC. Then, I pulled the Write-Protect jumper out to see if that was the culprit... No dice, the flash chip was still acting normally. Next, I pulled the Hold jumper out... and bingo! I got a Read Error from the software saying that the chip wasn't responding.
+
+So, instead of leaving Hold unconnected like I originally did, I tried tying it to ground with that jumper... And the read error went away! It was behaving normally again.
+
+On the microcontroller side of things, I tried using another jumper to tie Hold to ground while leaving Write-Protect floating... and suddenly, I got the byte of data I was expecting!
+
+My breadboard prototype now looked like this:
+
+![BreadBoard Prototype 2](https://i.imgur.com/GSiPe29.jpg)
