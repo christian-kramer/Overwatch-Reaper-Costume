@@ -205,7 +205,7 @@ The result of these four transactions should yield two devices that turn on, and
 
 And... here it is in action:
 
-![Dual-SPI Device Test](https://i.gyazo.com/60b7cc6970f24641ac8ad5783b88ba2e.gif)
+https://i.gyazo.com/60b7cc6970f24641ac8ad5783b88ba2e.gif
 
 Success! No tri-state buffer needed.
 
