@@ -205,7 +205,7 @@ The result of these four transactions should yield two devices that turn on, and
 
 And... here it is in action:
 
-https://i.gyazo.com/60b7cc6970f24641ac8ad5783b88ba2e.gif
+![Dual-SPI Device Test](https://i.gyazo.com/60b7cc6970f24641ac8ad5783b88ba2e.gif)
 
 Success! No tri-state buffer needed.
 
@@ -261,3 +261,32 @@ Because these boards are so complex, and I never tested the AAT1217 before desig
 And... Hey! It works!
 
 This was with fresh batteries, supplying very nearly 3v... But for fun, I tested this with batteries that wouldn't even run my analog wall clock, and the laser powered up just fine at the same brightness as the fresh batteries. Whether or not the amplifier will still work with batteries this dead remains to be seen.
+
+The next parts of the board, I assembled in steps. The very next thing I soldered was the STM32. I wanted to make sure that was getting clean enough power to talk to the ST-Link, over the programming header on the board. The "RST" pin you see towards the bottom of the header isn't actually needed. I included it just in case I needed to force-reset the chip for any reason, but during normal programming/debugging operation, the STM32 accepts a "software reset" - a special sequence of bits that tells the internal firmware of the STM32 that it's time to  go into reset mode. When powered off the batteries, the ST-Link only needs 3 wires: DIO, CLK, and GND.
+
+Next was the MCP4725 and associated 4.7kΩ I2C pull-up resistors. I wanted to make sure that, before I assembled the amplifier, I was getting a good output from the DAC to limit how much troubleshooting I'd have to do, should this board not produce sound as expected.
+
+After I verified that the MCP4725 was outputting the voltages I told it, at speeds comparable to what I need for clear audio, I went ahead and assembled the  amplifier. I had a test from earlier that I already made to play a small soundbyte from the internal STM32 flash... After loading that up, and plugging in the speaker... it sounded great!
+
+Now that I knew sound worked at the most basic level, I knew I could go ahead and get the flash chip programmed with all the voice lines, and try playing WAV files from that.
+
+![All Voice Lines Audacity](https://i.imgur.com/gEZM6dc.png)
+
+Essentially, I just stacked everything together end-to-end... but I knew that by just doing that, it'd be hard to see in the hex editor where individual soundbytes were in the file. So, I came up with a way to delineate each one by driving the amplitude up to 255 between each voice line. In audacity, it looks like this:
+
+![Audacity Amplitude Delineation](https://i.imgur.com/JBwqtrD.png)
+
+In the hex editor, it looks like this:
+
+![CH341A Amplitude Delineation](https://i.imgur.com/dsrHHVw.png)
+
+That wall of FF's you see there is my marker for where the sound data ends, and at the end of the wall is the next voice line. It continues on past the bottom of the window a bit, so it's impossible to miss while I'm scrolling. This way, I've eliminated guesswork for where each individual sound file is located... and I don't have to re-guess if I decide to switch out or remove a voice line from the chip. It's plain-as-day to see what I'm working with. Also, to quash any concerns about "wasting bytes"... These voice lines barely use 1/4 of the chip's total capacity. I've got plenty of room to spare for making things easy for myself.
+
+After proving that I could play audio from the chip through the DAC and amplifier... I moved on to soldering the radio onto the SPI bus. Once the radio was on, I loaded up another program of mine that tests bidirectional communication with another radio on a breadboard, to trigger playing a sound file. Something unusual happened, though... Unlike my breadboard tests with an (in theory) identical circuit, the assembled board refused to transmit back to the other radio, after the sound file finished playing. "This is odd," I thought, because in the program, it's supposed to wait for the broadcast... What's going on?
+
+My initial thought was that the power requirements were too much... but the issue persisted even *after* I unplugged the speaker. What gives? My next thought was that maybe I really did need that tri-state buffer, after all. Unpredictable chips causing weird behavior, and such... But after some tests with reading the status register of the nRF24L01, I proved that the flash chip was handing over control of the MISO line like it should. What in the world was going on here?! Faulty radio? Using my breadboard prototype, I was quickly able to test all 9 other radios in my pack of 10 from Amazon, and all worked just fine. The likelihood that I picked the single bad one at random from the bag was too small for me to really consider... Due to the proximity of the radio's pins to the flash chip, it would be too  risky to remove it... So I opted to try using jumper wires to test the radio I had soldered onto my board. I had difficulty getting one jumper on the MISO pin, due to a glob of solder getting in the way. After heating it up, and moving it down to the base of the pin, an idea popped into my head: "What if that just fixed it, right there?"
+
+So I turned it on, and boom! Bidirectional communication restored. All it was, was a bad solder joint on one of the data pins! What a relief. With that final outlying problem solved, I had in my hands an (almost) fully working board. All that was left was to get the LEDs, transistors, and the Trigger connector soldered, and crimp some more JST connectors onto my lasers!
+
+![Mostly completed front side](https://i.imgur.com/UviRPaV.jpg)
+![Mostly completed back side](https://i.imgur.com/0UH8qXn.jpg)
