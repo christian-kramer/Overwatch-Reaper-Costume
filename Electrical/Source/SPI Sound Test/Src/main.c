@@ -85,7 +85,7 @@ char flashRead(int location)
 {
 	uint8_t spiTxBuf[4], spiRxBuf[1];
 
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_RESET);
 
 	spiTxBuf[0] = 0x03;
 	spiTxBuf[1] = location>>16; //first byte of address
@@ -94,7 +94,7 @@ char flashRead(int location)
 	HAL_SPI_Transmit(&hspi1, spiTxBuf, 4, 50);
 	HAL_SPI_Receive(&hspi1, spiRxBuf, 1, 50);
 	//HAL_SPI_TransmitReceive(&hspi1, spiTxBuf, spiRxBuf, 4, 50);
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_SET);
 	return spiRxBuf[0];
 }
 /* USER CODE END 0 */
@@ -140,12 +140,12 @@ int main(void)
   char txData[32] = "done";
   char waiting = 1;
 
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, GPIO_PIN_RESET);
 
   HAL_Delay(100);
 
-  NRF24_begin(GPIOA, GPIO_PIN_1, NULL, hspi1);
+  NRF24_begin(GPIOA, GPIO_PIN_2, NULL, hspi1);
 
   NRF24_setAutoAck(true);
   NRF24_setChannel(52);
@@ -153,6 +153,8 @@ int main(void)
 
   NRF24_openReadingPipe(1, 0x11223344AA);
   NRF24_startListening();
+
+
 
   /* USER CODE END 2 */
 
@@ -162,12 +164,16 @@ int main(void)
   {
 	  if (waiting)
 	  {
+		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1);
+		  HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_0);
+		  HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_1);
+		  HAL_Delay(500);
 		  if (NRF24_available())
 		  {
 			  NRF24_read(rxData, 32);
 			  if (strcmp(rxData, "play") == 0)
 			  {
-				  for (int i = 0x00002c; i < 0x007930; i++)
+				  for (int i = 0x00002c; i < 0x0051A0; i++)
 				  {
 					  dacOutput(flashRead(i));
 				  }
@@ -180,6 +186,7 @@ int main(void)
 		  NRF24_stopListening();
 		  NRF24_openWritingPipe(0x11223344AA);
 		  NRF24_write(txData, 32);
+		  dacOutput(0);
 	  }
 	  /*
 	  if (pos < end)
@@ -336,17 +343,28 @@ static void MX_GPIO_Init(void)
   GPIO_InitTypeDef GPIO_InitStruct;
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_0|GPIO_PIN_1, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2|GPIO_PIN_3, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : PA1 */
-  GPIO_InitStruct.Pin = GPIO_PIN_1;
+  /*Configure GPIO pins : PF0 PF1 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PA2 PA3 */
+  GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_3;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

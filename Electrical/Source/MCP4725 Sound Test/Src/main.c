@@ -163,7 +163,7 @@ int main(void)
 	  	  {
 	  		  state = 0;
 	  		  pos = 0;
-	  		  dacOutput(0);
+	  		  //dacOutput(0);
 	  	  }
 	    }
   /* USER CODE END WHILE */

@@ -128,6 +128,11 @@ int main(void)
 		  if (NRF24_write(txData, 32))
 		  {
 			  waiting = 0;
+
+			  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+			  HAL_Delay(500);
+			  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
+
 			  NRF24_openReadingPipe(1, 0x11223344AA);
 			  NRF24_startListening();
 		  }
@@ -138,6 +143,10 @@ int main(void)
 		  {
 			  NRF24_read(rxData, 32);
 			  if (strcmp(rxData, "done") == 0)
+			  {
+				  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+			  }
+			  else
 			  {
 				  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
 			  }
