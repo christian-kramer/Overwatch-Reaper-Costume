@@ -164,10 +164,19 @@ int main(void)
   {
 	  if (waiting)
 	  {
-		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1);
-		  HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_0);
-		  HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_1);
-		  HAL_Delay(500);
+		  if (!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_4))
+		  {
+			  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, SET);
+			  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_0, SET);
+			  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_1, SET);
+		  }
+		  else
+		  {
+			  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, RESET);
+			  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_0, RESET);
+			  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_1, RESET);
+		  }
+
 		  if (NRF24_available())
 		  {
 			  NRF24_read(rxData, 32);
@@ -368,6 +377,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PA4 */
+  GPIO_InitStruct.Pin = GPIO_PIN_4;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PB1 */
