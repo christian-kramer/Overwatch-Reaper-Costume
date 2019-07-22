@@ -290,3 +290,39 @@ So I turned it on, and boom! Bidirectional communication restored. All it was, w
 
 ![Mostly completed front side](https://i.imgur.com/UviRPaV.jpg)
 ![Mostly completed back side](https://i.imgur.com/0UH8qXn.jpg)
+
+Next, I needed to get the front-facing LEDs, transistors, and trigger switch port added on.
+
+![Finished Board](https://i.imgur.com/BmAQbxq.jpg)
+
+Oddly enough, I think the transistors ended up being the most difficult part to solder by far. I've actually never soldered a TO-92 package component before, so I was woefully unprepared for the challenges I encountered. These things dissipate as much heat as possible by design... and when a glob of solder comes into contact with one of the legs, it pretty much instantly cools and solidifies before it has a chance to bond with the board. This leaves you with legs that *look* soldered... but actually have no electrical contact with the board whatsoever, and can be moved as easily as a loose tooth. Reworking is almost impossible, because any heat you add to the problem-solder gets immediately transferred to the transistor casing. Too much heat kills the transistor, which means you have to heat it up an absurd amount to get the solder glob to even budge. Adding more solder to try to rectify the problem doesn't work either, because I've found it almost always ends up contacting a neighboring pad.
+
+I learned all this after killing around 6 transistors on the second board, trying to get them to stick.
+
+When you do kill a transistor by trying to solder it too much, it is extremely difficult to remove. Because the legs cool very quickly, pulling the entire length out through the hole isn't really an option. I had to resort to cutting the legs as short as possible, and then simultaneously heating them up, and torquing them through with brute force. Actually, on that second board, a fragment of the Base pin of a broken transistor got permanently stuck in the hole, and I was forced to solder the new leg directly to the resistor.
+
+![transistor pin](https://dl3.pushbulletusercontent.com/mfp4FHvILTJXPQ6DLKwrXo9elstt6gY1/20190722_113351.jpg)
+
+As far as soldering the rest of the legs... I came up with a technique that seemed to work pretty reliably, and it's one that I'll likely use for future TO-92 soldering; if you cut the legs flush with the holes *before* soldering, and just "cap" each one with a small glob of solder... it mitigates almost every issue mentioned above. You still only get "one shot," and it still has a good chance of making contact with a neighboring pad, but it's the best I've been able to come up with so far.
+
+After this was all said and done with, I fired up the second board to make sure it worked as intended. But... it didn't, in one very weird aspect. One of the LEDs on the front was really, really dim when it was supposed to be off... and only got *dimmer* when it was supposed to be on! What in the world?! I was convinced I had managed to solder the transistors withoug killing them, this time... so what was happening? I measured the voltage at the base resistor of both of the other transistors... 3.3v, just as they should be. Then, I measured it at the base resistor of the problem transistor... 0v! The problem must be up-stream somewhere. Is the other end of the resistor getting 3.3v? Yes... and that goes directly to the microcontroller. And... that pin looks fine, from a quick visual inspection. Uh oh, did my transistor-shenanigans end up killing a GPIO pin? A quick reading of the pin with my multimeter shows that it's putting out 3.3v on command... so, no, it's fine. Must be a problem with the pad. But, quickly checking the continuity of the resistor showed that it was good all the way through! How could this be?!
+
+After much troubleshooting, the answer was a little embarrassing... the very, *very* slight pressure from the multimeter probe was forcing the pin to make contact with the pad, and give a false impression of reliable continuity. One swipe from my fine-tipped soldering iron connected the pad properly, and the LED lit up and turned off just fine.
+
+That's the one thing I really dislike about these STM32s... The dual-inline package has such fine pins that it seems to almost never go down without needing some sort of tedious rework. I'll have to try out a quad flat package in a future project to see if that's easier.
+
+In the meantime, I've also figured out an even easier/more reliable method of soldering TO-92's... just use solder paste, and heat them up like you would an SMD component. The solder paste flows exactly where it needs to, and provides a very secure bond with the board. No hassle, and almost guaranteed to not kill the transistor.
+
+![finished 4](https://i.imgur.com/zo3nDPR.jpg)
+
+Eventually, I got all 4 boards finished up, and ready to program! Still gotta finish all those lasers and cables up, though.
+
+Meanwhile on the mechanical side, things were (literally) starting to take shape.
+
+![Handles](https://i.imgur.com/QDv3fkI.png)
+
+Here are the bottoms of the handles that house part of the trigger assembly, and form the very bottom of the battery housing...
+
+![small parts](https://i.imgur.com/qxmt8Hh.png)
+
+And here are some various small parts for the internals of the gun, like the Speaker Tray, PCB Tray, the two halves of the 5-Laser-Holder that mounts to the two holes on the PCB, and some general support material.
