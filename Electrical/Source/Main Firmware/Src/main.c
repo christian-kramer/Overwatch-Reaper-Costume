@@ -57,8 +57,8 @@ SPI_HandleTypeDef hspi1;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_SPI1_Init(void);
 static void MX_I2C1_Init(void);
+static void MX_SPI1_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -66,7 +66,6 @@ static void MX_I2C1_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-
 unsigned char buffer[3];
 
 void dacOutput(char eightBitValue)
@@ -129,46 +128,38 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_SPI1_Init();
   MX_I2C1_Init();
+  MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-  /*
-  int pos = 0x00002c;
-  int end = 0x007930;
-  */
-  //size_t ledlength = sizeof(sounddata)/sizeof(sounddata[0]);
   char rxData[50];
-  char txData[32] = "done";
-  char waiting = 1;
+	char txData[32] = "done";
+	char waiting = 1;
 
 
-  for (int i = 0x00002c; i < 0x002474; i++)
-  {
+	for (int i = 0x00002c; i < 0x002474; i++)
+	{
 	  dacOutput(flashRead(i));
-  }
-  for (int i = 0x002699; i < 0x005739; i++)
-  {
+	}
+	for (int i = 0x002699; i < 0x005739; i++)
+	{
 	  dacOutput(flashRead(i));
-  }
+	}
 
 
 
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, GPIO_PIN_RESET);
 
-  HAL_Delay(100);
+	HAL_Delay(100);
 
-  NRF24_begin(GPIOA, GPIO_PIN_2, NULL, hspi1);
+	NRF24_begin(GPIOA, GPIO_PIN_2, NULL, hspi1);
 
-  NRF24_setAutoAck(true);
-  NRF24_setChannel(52);
-  NRF24_setPayloadSize(32);
+	NRF24_setAutoAck(true);
+	NRF24_setChannel(52);
+	NRF24_setPayloadSize(32);
 
-  NRF24_openReadingPipe(1, 0x11223344AA);
-  NRF24_startListening();
-
-
-
+	NRF24_openReadingPipe(1, 0x11223344AA);
+	NRF24_startListening();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -210,17 +201,6 @@ int main(void)
 		  NRF24_write(txData, 32);
 		  dacOutput(0);
 	  }
-	  /*
-	  if (pos < end)
-	  {
-		  dacOutput(flashRead(pos));
-		  pos++;
-	  }
-	  else
-	  {
-		  pos = 0x00002c;
-	  }
-	  */
 
   /* USER CODE END WHILE */
 
@@ -373,7 +353,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOF, GPIO_PIN_0|GPIO_PIN_1, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2|GPIO_PIN_3, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, Radio_CS_Pin|Flash_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
@@ -385,25 +365,18 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PA2 */
-  GPIO_InitStruct.Pin = GPIO_PIN_2;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : PA3 */
-  GPIO_InitStruct.Pin = GPIO_PIN_3;
+  /*Configure GPIO pins : Radio_CS_Pin Flash_CS_Pin */
+  GPIO_InitStruct.Pin = Radio_CS_Pin|Flash_CS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PA4 */
-  GPIO_InitStruct.Pin = GPIO_PIN_4;
+  /*Configure GPIO pin : Trigger_Pin */
+  GPIO_InitStruct.Pin = Trigger_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(Trigger_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PB1 */
   GPIO_InitStruct.Pin = GPIO_PIN_1;

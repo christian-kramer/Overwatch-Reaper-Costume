@@ -1,0 +1,56 @@
+Configuration	SPI Sound Test
+STM32CubeMX 	4.27.0
+Date	07/18/2019
+MCU	STM32F030F4Px
+
+
+
+PERIPHERALS	MODES	FUNCTIONS	PINS
+I2C1	I2C	I2C1_SCL	PA9
+I2C1	I2C	I2C1_SDA	PA10
+SPI1	Full-Duplex Master	SPI1_MISO	PA6
+SPI1	Full-Duplex Master	SPI1_MOSI	PA7
+SPI1	Full-Duplex Master	SPI1_SCK	PA5
+SYS	SysTick	SYS_VS_Systick	VP_SYS_VS_Systick
+
+
+
+Pin Nb	PINs	FUNCTIONs	LABELs
+2	PF0-OSC_IN	GPIO_Output	
+3	PF1-OSC_OUT	GPIO_Output	
+8	PA2	GPIO_Output	
+9	PA3	GPIO_Output	
+10	PA4	GPIO_Input	
+11	PA5	SPI1_SCK	
+12	PA6	SPI1_MISO	
+13	PA7	SPI1_MOSI	
+14	PB1	GPIO_Output	
+17	PA9	I2C1_SCL	
+18	PA10	I2C1_SDA	
+
+
+
+SOFTWARE PROJECT
+
+Project Settings : 
+Project Name : SPI Sound Test
+Project Folder : L:\Documents\GitHub\Overwatch-Reaper-Guns\Electrical\Source\SPI Sound Test
+Toolchain / IDE : SW4STM32
+Firmware Package Name and Version : STM32Cube FW_F0 V1.9.0
+
+
+Code Generation Settings : 
+STM32Cube Firmware Library Package : Copy only the necessary library files
+Generate peripheral initialization as a pair of '.c/.h' files per peripheral : No
+Backup previously generated files when re-generating : No
+Delete previously generated files when not re-generated : Yes
+Set all free pins as analog (to optimize the power consumption) : No
+
+
+Toolchains Settings : 
+Compiler Optimizations : 
+
+
+
+
+
