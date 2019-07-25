@@ -86,7 +86,7 @@ char flashRead(int location)
 	//see if moving this line outside of flashread helps to speed things up
 	uint8_t spiTxBuf[4], spiRxBuf[1];
 
-	HAL_GPIO_WritePin(GPIOA, Flash_CS_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, Flash_CS_Pin, RESET);
 
 	spiTxBuf[0] = 0x03;
 	spiTxBuf[1] = location>>16; //first byte of address
@@ -95,9 +95,15 @@ char flashRead(int location)
 	HAL_SPI_Transmit(&hspi1, spiTxBuf, 4, 10);
 	HAL_SPI_Receive(&hspi1, spiRxBuf, 1, 10);
 	//HAL_SPI_TransmitReceive(&hspi1, spiTxBuf, spiRxBuf, 4, 50);
-	HAL_GPIO_WritePin(GPIOA, Flash_CS_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOA, Flash_CS_Pin, SET);
 	return spiRxBuf[0];
 }
+
+
+char shots = 0;
+char waiting_for_reload = 0;
+char pairing = 1;
+
 /* USER CODE END 0 */
 
 /**
@@ -133,16 +139,17 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
   char rxData[52];
-  char pairing = 1;
   char step = 1;
   char master = 0;
+  uint32_t last_time;
 
 
-  /* Speaker Test */
+  /* Speaker Test
 	for (int i = 0x00002c; i < 0x002474; i++)
 	{
 	  dacOutput(flashRead(i));
 	}
+	*/
 	/*
 	for (int i = 0x002699; i < 0x005739; i++)
 	{
@@ -151,8 +158,8 @@ int main(void)
 	*/
 
 	/* Init NRF24 */
-	HAL_GPIO_WritePin(GPIOA, Flash_CS_Pin, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(GPIOA, Radio_CS_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, Flash_CS_Pin, SET);
+	HAL_GPIO_WritePin(GPIOA, Radio_CS_Pin, RESET);
 
 	HAL_Delay(100);
 
@@ -165,6 +172,8 @@ int main(void)
 	NRF24_stopListening();
 	NRF24_openWritingPipe(0x11223344AA);
 	NRF24_openReadingPipe(1, 0x11223344AA);
+
+	last_time = HAL_GetTick();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -173,6 +182,12 @@ int main(void)
   {
 	  if (pairing)
 	  {
+		  if (HAL_GetTick() - last_time > 250)
+		  {
+			  last_time = HAL_GetTick();
+			  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1);
+		  }
+
 		  if (step == 1)
 		  {
 			  /* Try a shitload of times to broadcast successfully */
@@ -234,7 +249,7 @@ int main(void)
 
 				  for (int i = 0; i < 100; i++)
 				  {
-					  if (NRF24_write("play", 32))
+					  if (NRF24_write("108", 32))
 					  {
 						  /* Finish */
 						  pairing = 0;
@@ -252,9 +267,10 @@ int main(void)
 				  if (NRF24_available())
 				  {
 					  NRF24_read(rxData, 32);
-					  if (strcmp(rxData, "play") == 0)
+					  if (strcmp(rxData, "108") == 0)
 					  {
 						  /* Finish */
+						  NRF24_stopListening();
 						  pairing = 0;
 					  }
 				  }
@@ -264,6 +280,7 @@ int main(void)
 	  else
 	  {
 		  /* Pairing done */
+		  /*
 		  if (master)
 		  {
 			  HAL_GPIO_WritePin(GPIOF, Top_LED_Pin, SET);
@@ -271,6 +288,81 @@ int main(void)
 		  else
 		  {
 			  HAL_GPIO_WritePin(GPIOF, Bottom_LED_Pin, SET);
+		  }
+		  */
+		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, SET);
+
+		  if (waiting_for_reload)
+		  {
+			  if (master)
+			  {
+				  if (NRF24_write("done", 32))
+				  {
+					  shots = 0;
+					  waiting_for_reload = 0;
+					  for (int i = 0x002699; i < 0x005739; i++)
+					  {
+						  dacOutput(flashRead(i));
+					  }
+				  }
+			  }
+			  else
+			  {
+				  if (NRF24_available())
+				  {
+					  NRF24_read(rxData, 32);
+					  if (strcmp(rxData, "done") == 0)
+					  {
+						  shots = 0;
+						  waiting_for_reload = 0;
+						  for (int i = 0x002699; i < 0x005739; i++)
+						  {
+							  dacOutput(flashRead(i));
+						  }
+					  }
+				  }
+			  }
+
+
+		  }
+		  else
+		  {
+			  //turn off radio for duration of shots
+			  NRF24_powerDown();
+			  if (!HAL_GPIO_ReadPin(GPIOA, Trigger_Pin))
+			  {
+				  shots++;
+				  if (shots & 1)
+				  {
+					  HAL_GPIO_WritePin(GPIOF, Top_LED_Pin, SET);
+				  }
+				  else
+				  {
+					  HAL_GPIO_WritePin(GPIOF, Bottom_LED_Pin, SET);
+				  }
+
+
+				  for (int i = 0x00002c; i < 0x002474; i++)
+				  {
+					  dacOutput(flashRead(i));
+					  if (i == 0x0002c + 1000)
+					  {
+						  HAL_GPIO_WritePin(GPIOF, Top_LED_Pin|Bottom_LED_Pin, RESET);
+					  }
+				  }
+
+				  HAL_Delay(10);
+
+				  if (shots == 4)
+				  {
+					  if (!master)
+					  {
+						  //turn on radio
+						  NRF24_powerUp();
+					  }
+					  waiting_for_reload = 1;
+				  }
+			  }
 		  }
 	  }
 
