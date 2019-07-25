@@ -49,6 +49,10 @@
 
 /* Private define ------------------------------------------------------------*/
 
+#define Bottom_LED_Pin GPIO_PIN_0
+#define Bottom_LED_GPIO_Port GPIOF
+#define Top_LED_Pin GPIO_PIN_1
+#define Top_LED_GPIO_Port GPIOF
 #define Radio_CS_Pin GPIO_PIN_2
 #define Radio_CS_GPIO_Port GPIOA
 #define Flash_CS_Pin GPIO_PIN_3
