@@ -42,6 +42,7 @@
 
 /* USER CODE BEGIN Includes */
 #include "MY_NRF24.h"
+#include "stdbool.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -131,22 +132,25 @@ int main(void)
   MX_I2C1_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-  char rxData[50];
-	char txData[32] = "done";
-	char waiting = 1;
+  char rxData[52];
+  char pairing = 1;
+  char step = 1;
+  char master = 0;
 
 
+  /* Speaker Test */
 	for (int i = 0x00002c; i < 0x002474; i++)
 	{
 	  dacOutput(flashRead(i));
 	}
+	/*
 	for (int i = 0x002699; i < 0x005739; i++)
 	{
 	  dacOutput(flashRead(i));
 	}
+	*/
 
-
-
+	/* Init NRF24 */
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, GPIO_PIN_RESET);
 
@@ -158,48 +162,98 @@ int main(void)
 	NRF24_setChannel(52);
 	NRF24_setPayloadSize(32);
 
-	NRF24_openReadingPipe(1, 0x11223344AA);
-	NRF24_startListening();
+	NRF24_stopListening();
+	NRF24_openWritingPipe(0x11223344AA);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if (waiting)
+	  if (pairing)
 	  {
-		  if (!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_4))
+		  if (step == 1)
 		  {
-			  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, SET);
-			  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_0, SET);
-			  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_1, SET);
-		  }
-		  else
-		  {
-			  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, RESET);
-			  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_0, RESET);
-			  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_1, RESET);
+			  /* Try a shitload of times to broadcast successfully */
+			  for (int i = 0; i < 100; i++)
+			  {
+				  if (NRF24_write("here", 32))
+				  {
+					  /* Assume Slave */
+					  master = 0;
+					  i = 100;
+				  }
+				  else
+				  {
+					  /* Assume Master */
+					  master = 1;
+				  }
+			  }
+
+
+
+
+			  /* Attempts at broadcasting "here" complete, start listening */
+			  NRF24_openReadingPipe(1, 0x11223344AA);
+			  NRF24_startListening();
+
+			  /* Advance to next step */
+			  step++;
 		  }
 
-		  if (NRF24_available())
+		  if (step == 2)
 		  {
-			  NRF24_read(rxData, 32);
-			  if (strcmp(rxData, "play") == 0)
+			  if (master)
 			  {
-				  for (int i = 0x00B400; i < 0x0156ED; i++)
+				  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_1, SET);
+				  /* Listen for Slave "here" */
+				  if (NRF24_available())
 				  {
-					  dacOutput(flashRead(i));
+					  NRF24_read(rxData, 32);
+					  if (strcmp(rxData, "here") == 0)
+					  {
+						  NRF24_stopListening();
+						  //NRF24_openWritingPipe(0x11223344AA);
+
+						  /* Attempt many times to write abcd */
+						  //when there is a delay it seems to sync up
+						  //try getting rid of opening the same writing pipe address...
+						  for (int i = 0; i < 10000; i++)
+						  {
+
+							  if (NRF24_write("play", 32))
+							  {
+								  /* Finish */
+								  for (int i = 0x002699; i < 0x005739; i++)
+									{
+									  dacOutput(flashRead(i));
+									}
+							  }
+						  }
+					  }
 				  }
-				  waiting = 0;
+			  }
+			  else
+			  {
+				  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_0, SET);
+				  if (NRF24_available())
+				  {
+					  NRF24_read(rxData, 32);
+					  if (strcmp(rxData, "play") == 0)
+					  {
+						  /* Finish */
+						  for (int i = 0x002699; i < 0x005739; i++)
+							{
+							  dacOutput(flashRead(i));
+							}
+					  }
+				  }
 			  }
 		  }
 	  }
 	  else
 	  {
-		  NRF24_stopListening();
-		  NRF24_openWritingPipe(0x11223344AA);
-		  NRF24_write(txData, 32);
-		  dacOutput(0);
+		  /* Pairing done */
 	  }
 
   /* USER CODE END WHILE */
