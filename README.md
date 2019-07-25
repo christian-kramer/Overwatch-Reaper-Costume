@@ -326,3 +326,11 @@ Here are the bottoms of the handles that house part of the trigger assembly, and
 ![small parts](https://i.imgur.com/qxmt8Hh.png)
 
 And here are some various small parts for the internals of the gun, like the Speaker Tray, PCB Tray, the two halves of the 5-Laser-Holder that mounts to the two holes on the PCB, and some general support material.
+
+Some bigger parts have also been printed, such as one half of the front barrel which houses the PCB, and the decorative handle on the back.
+
+![Front barrel and handle](https://i.imgur.com/OfKLXz8.jpg?1)
+
+Inside, the slot for the tray, and the cavity for the front-facing fiber optic cable look great!
+
+![Front barrel inside](https://i.imgur.com/7keeL8f.jpg)
