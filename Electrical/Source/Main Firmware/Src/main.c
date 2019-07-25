@@ -86,7 +86,7 @@ char flashRead(int location)
 	//see if moving this line outside of flashread helps to speed things up
 	uint8_t spiTxBuf[4], spiRxBuf[1];
 
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, Flash_CS_Pin, GPIO_PIN_RESET);
 
 	spiTxBuf[0] = 0x03;
 	spiTxBuf[1] = location>>16; //first byte of address
@@ -95,7 +95,7 @@ char flashRead(int location)
 	HAL_SPI_Transmit(&hspi1, spiTxBuf, 4, 10);
 	HAL_SPI_Receive(&hspi1, spiRxBuf, 1, 10);
 	//HAL_SPI_TransmitReceive(&hspi1, spiTxBuf, spiRxBuf, 4, 50);
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOA, Flash_CS_Pin, GPIO_PIN_SET);
 	return spiRxBuf[0];
 }
 /* USER CODE END 0 */
@@ -151,12 +151,12 @@ int main(void)
 	*/
 
 	/* Init NRF24 */
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, Flash_CS_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOA, Radio_CS_Pin, GPIO_PIN_RESET);
 
 	HAL_Delay(100);
 
-	NRF24_begin(GPIOA, GPIO_PIN_2, NULL, hspi1);
+	NRF24_begin(GPIOA, Radio_CS_Pin, NULL, hspi1);
 
 	NRF24_setAutoAck(true);
 	NRF24_setChannel(52);
@@ -164,6 +164,7 @@ int main(void)
 
 	NRF24_stopListening();
 	NRF24_openWritingPipe(0x11223344AA);
+	NRF24_openReadingPipe(1, 0x11223344AA);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -194,7 +195,6 @@ int main(void)
 
 
 			  /* Attempts at broadcasting "here" complete, start listening */
-			  NRF24_openReadingPipe(1, 0x11223344AA);
 			  NRF24_startListening();
 
 			  /* Advance to next step */
@@ -205,47 +205,57 @@ int main(void)
 		  {
 			  if (master)
 			  {
-				  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_1, SET);
 				  /* Listen for Slave "here" */
 				  if (NRF24_available())
 				  {
 					  NRF24_read(rxData, 32);
 					  if (strcmp(rxData, "here") == 0)
 					  {
-						  NRF24_stopListening();
-						  //NRF24_openWritingPipe(0x11223344AA);
-
-						  /* Attempt many times to write abcd */
-						  //when there is a delay it seems to sync up
-						  //try getting rid of opening the same writing pipe address...
-						  for (int i = 0; i < 10000; i++)
-						  {
-
-							  if (NRF24_write("play", 32))
-							  {
-								  /* Finish */
-								  for (int i = 0x002699; i < 0x005739; i++)
-									{
-									  dacOutput(flashRead(i));
-									}
-							  }
-						  }
+						  step++;
 					  }
 				  }
 			  }
 			  else
 			  {
-				  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_0, SET);
+				  step++;
+			  }
+		  }
+
+		  if (step == 3)
+		  {
+			  if (master)
+			  {
+				  /*
+				  HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_1);
+				  HAL_Delay(100);
+				  */
+
+				  NRF24_stopListening();
+
+				  for (int i = 0; i < 100; i++)
+				  {
+					  if (NRF24_write("play", 32))
+					  {
+						  /* Finish */
+						  pairing = 0;
+						  i = 100;
+					  }
+				  }
+			  }
+			  else
+			  {
+				  /*
+				  HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_0);
+				  HAL_Delay(100);
+				  */
+
 				  if (NRF24_available())
 				  {
 					  NRF24_read(rxData, 32);
 					  if (strcmp(rxData, "play") == 0)
 					  {
 						  /* Finish */
-						  for (int i = 0x002699; i < 0x005739; i++)
-							{
-							  dacOutput(flashRead(i));
-							}
+						  pairing = 0;
 					  }
 				  }
 			  }
@@ -254,6 +264,14 @@ int main(void)
 	  else
 	  {
 		  /* Pairing done */
+		  if (master)
+		  {
+			  HAL_GPIO_WritePin(GPIOF, Top_LED_Pin, SET);
+		  }
+		  else
+		  {
+			  HAL_GPIO_WritePin(GPIOF, Bottom_LED_Pin, SET);
+		  }
 	  }
 
   /* USER CODE END WHILE */
@@ -404,7 +422,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_0|GPIO_PIN_1, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOF, Bottom_LED_Pin|Top_LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, Radio_CS_Pin|Flash_CS_Pin, GPIO_PIN_RESET);
@@ -412,8 +430,8 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : PF0 PF1 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
+  /*Configure GPIO pins : Bottom_LED_Pin Top_LED_Pin */
+  GPIO_InitStruct.Pin = Bottom_LED_Pin|Top_LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
