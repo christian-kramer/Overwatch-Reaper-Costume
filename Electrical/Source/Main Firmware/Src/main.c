@@ -103,7 +103,7 @@ char flashRead(int location)
 char rnd_channel()
 {
 	char upper = 124;
-	char lower = 0;
+	char lower = 1;
 	srand(HAL_GetTick());
 	return (rand() % (upper - lower + 1)) + lower;
 }
@@ -178,7 +178,7 @@ int main(void)
 	NRF24_begin(GPIOA, Radio_CS_Pin, NULL, hspi1);
 
 	NRF24_setAutoAck(true);
-	NRF24_setChannel(52);
+	NRF24_setChannel(0);
 	NRF24_setPayloadSize(32);
 
 	NRF24_stopListening();
