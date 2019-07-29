@@ -100,6 +100,15 @@ char flashRead(int location)
 }
 
 
+char rnd_channel()
+{
+	char upper = 124;
+	char lower = 0;
+	srand(HAL_GetTick());
+	return (rand() % (upper - lower + 1)) + lower;
+}
+
+
 char shots = 0;
 char waiting_for_reload = 0;
 char pairing = 1;
@@ -141,7 +150,10 @@ int main(void)
   char rxData[52];
   char step = 1;
   char master = 0;
+  char channel_buffer[32];
+  char channel_number;
   uint32_t last_time;
+
 
 
   /* Speaker Test
@@ -226,6 +238,8 @@ int main(void)
 					  NRF24_read(rxData, 32);
 					  if (strcmp(rxData, "here") == 0)
 					  {
+						  channel_number = rnd_channel();
+						  itoa(channel_number, channel_buffer, 10);
 						  step++;
 					  }
 				  }
@@ -247,11 +261,18 @@ int main(void)
 
 				  NRF24_stopListening();
 
+				  //logic to generate random number only once and store it globally
+
 				  for (int i = 0; i < 100; i++)
 				  {
-					  if (NRF24_write("108", 32))
+					  //nrf24_write picked_channel
+
+					  if (NRF24_write(channel_buffer, 32))
 					  {
 						  /* Finish */
+
+						  /* Set Channel to picked channel */
+						  NRF24_setChannel(channel_number);
 						  pairing = 0;
 						  i = 100;
 					  }
@@ -267,12 +288,19 @@ int main(void)
 				  if (NRF24_available())
 				  {
 					  NRF24_read(rxData, 32);
+
+					  //don't compare, instead just set channel to whatever came across
+					  NRF24_setChannel(atoi(rxData));
+					  NRF24_stopListening();
+					  pairing = 0;
+					  /*
 					  if (strcmp(rxData, "108") == 0)
 					  {
-						  /* Finish */
-						  NRF24_stopListening();
-						  pairing = 0;
+						  //Finish
+
+
 					  }
+				  	  */
 				  }
 			  }
 		  }
