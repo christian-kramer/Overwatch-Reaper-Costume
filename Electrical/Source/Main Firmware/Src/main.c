@@ -100,12 +100,74 @@ char flashRead(int location)
 }
 
 
-char rnd_channel()
+char rnd_number(uint8_t lower, uint8_t upper)
 {
-	char upper = 124;
-	char lower = 1;
 	srand(HAL_GetTick());
 	return (rand() % (upper - lower + 1)) + lower;
+}
+
+void playTrack(uint8_t track)
+{
+	static const unsigned int starts[25] = {
+		0x005A16,
+		0x00AD4A,
+		0x00FE98,
+		0x013185,
+		0x01AA17,
+		0x01F4B7,
+		0x024641,
+		0x02B936,
+		0x032681,
+		0x03700B,
+		0x03DAAB,
+		0x0433A1,
+		0x046F2B,
+		0x049637,
+		0x04B8EB,
+		0x051160,
+		0x056E40,
+		0x0592E0,
+		0x065801,
+		0x069C60,
+		0x06FC6A,
+		0x078ECA,
+		0x07F0EB,
+		0x0829F5,
+		0x085F95
+	};
+
+	static const unsigned int ends[25] = {
+		0x00AB8D,
+		0x00FC63,
+		0x012F64,
+		0x01A708,
+		0x01F339,
+		0x0243AA,
+		0x02B659,
+		0x032151,
+		0x036C90,
+		0x03D568,
+		0x043107,
+		0x046D29,
+		0x049342,
+		0x04B685,
+		0x050E0C,
+		0x056BDF,
+		0x0590B0,
+		0x06566E,
+		0x069AC0,
+		0x06F9D5,
+		0x078BEB,
+		0x07EE27,
+		0x082815,
+		0x085CFA,
+		0x08991E
+	};
+
+	for (int i = starts[track - 1]; i < ends[track - 1]; i++)
+	{
+		dacOutput(flashRead(i));
+	}
 }
 
 
@@ -152,6 +214,9 @@ int main(void)
   char master = 0;
   char channel_buffer[32];
   char channel_number;
+
+  char track_buffer[32];
+  char track_number;
   uint32_t last_time;
 
 
@@ -238,7 +303,7 @@ int main(void)
 					  NRF24_read(rxData, 32);
 					  if (strcmp(rxData, "here") == 0)
 					  {
-						  channel_number = rnd_channel();
+						  channel_number = rnd_number(1, 124);
 						  itoa(channel_number, channel_buffer, 10);
 						  step++;
 					  }
@@ -324,7 +389,7 @@ int main(void)
 		  {
 			  if (master)
 			  {
-				  if (NRF24_write("done", 32))
+				  if (NRF24_write(track_buffer, 32))
 				  {
 					  shots = 0;
 					  waiting_for_reload = 0;
@@ -332,6 +397,7 @@ int main(void)
 					  {
 						  dacOutput(flashRead(i));
 					  }
+					  playTrack(track_number);
 				  }
 			  }
 			  else
@@ -339,15 +405,15 @@ int main(void)
 				  if (NRF24_available())
 				  {
 					  NRF24_read(rxData, 32);
-					  if (strcmp(rxData, "done") == 0)
+					  shots = 0;
+					  waiting_for_reload = 0;
+
+					  for (int i = 0x002699; i < 0x005739; i++)
 					  {
-						  shots = 0;
-						  waiting_for_reload = 0;
-						  for (int i = 0x002699; i < 0x005739; i++)
-						  {
-							  dacOutput(flashRead(i));
-						  }
+						  dacOutput(flashRead(i));
 					  }
+
+					  playTrack(atoi(rxData));
 				  }
 			  }
 
@@ -383,7 +449,13 @@ int main(void)
 
 				  if (shots == 4)
 				  {
-					  if (!master)
+					  if (master)
+					  {
+						  //pick and store track number in global variable
+						  track_number = rnd_number(0, 24);
+						  itoa(track_number, track_buffer, 10);
+					  }
+					  else
 					  {
 						  //turn on radio
 						  NRF24_powerUp();
