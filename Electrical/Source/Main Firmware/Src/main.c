@@ -43,6 +43,7 @@
 /* USER CODE BEGIN Includes */
 #include "MY_NRF24.h"
 #include "stdbool.h"
+#define BIAS_LEVEL 127
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -83,7 +84,6 @@ void dacOutput(char eightBitValue)
 
 char flashRead(int location)
 {
-	//see if moving this line outside of flashread helps to speed things up
 	uint8_t spiTxBuf[4], spiRxBuf[1];
 
 	HAL_GPIO_WritePin(GPIOA, Flash_CS_Pin, RESET);
@@ -104,6 +104,15 @@ char rnd_number(uint8_t lower, uint8_t upper)
 {
 	srand(HAL_GetTick());
 	return (rand() % (upper - lower + 1)) + lower;
+}
+
+
+void debias_speaker()
+{
+	for (int i = BIAS_LEVEL; i < 0; i--)
+	{
+		dacOutput(i);
+	}
 }
 
 void playTrack(uint8_t track)
@@ -168,12 +177,51 @@ void playTrack(uint8_t track)
 	{
 		dacOutput(flashRead(i));
 	}
+	debias_speaker();
 }
 
 
 char shots = 0;
 char waiting_for_reload = 0;
 char pairing = 1;
+
+
+void reload()
+{
+	shots = 0;
+    waiting_for_reload = 0;
+
+    for (int i = 0x002699; i < 0x005739; i++)
+    {
+	    dacOutput(flashRead(i));
+    }
+    debias_speaker();
+}
+
+
+void shoot(int delay)
+{
+	shots++;
+    if (shots & 1)
+    {
+	    HAL_GPIO_WritePin(GPIOF, Top_LED_Pin, SET);
+    }
+    else
+    {
+	    HAL_GPIO_WritePin(GPIOF, Bottom_LED_Pin, SET);
+    }
+
+
+    for (int i = 0x00002c; i < 0x002474; i++)
+    {
+	    dacOutput(flashRead(i));
+	    if (i == 0x0002c + delay)
+	    {
+		    HAL_GPIO_WritePin(GPIOF, Top_LED_Pin|Bottom_LED_Pin, RESET);
+	    }
+    }
+    debias_speaker();
+}
 
 /* USER CODE END 0 */
 
@@ -259,6 +307,7 @@ int main(void)
   {
 	  if (pairing)
 	  {
+		  /* This if block handles the "pairing blink" of the status laser */
 		  if (HAL_GetTick() - last_time > 250)
 		  {
 			  last_time = HAL_GetTick();
@@ -272,19 +321,16 @@ int main(void)
 			  {
 				  if (NRF24_write("here", 32))
 				  {
-					  /* Assume Slave */
+					  /* There's already a gun ready and waiting; Assume Slave */
 					  master = 0;
 					  i = 100;
 				  }
 				  else
 				  {
-					  /* Assume Master */
+					  /* Nobody here; Assume Master */
 					  master = 1;
 				  }
 			  }
-
-
-
 
 			  /* Attempts at broadcasting "here" complete, start listening */
 			  NRF24_startListening();
@@ -319,19 +365,10 @@ int main(void)
 		  {
 			  if (master)
 			  {
-				  /*
-				  HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_1);
-				  HAL_Delay(100);
-				  */
-
 				  NRF24_stopListening();
-
-				  //logic to generate random number only once and store it globally
 
 				  for (int i = 0; i < 100; i++)
 				  {
-					  //nrf24_write picked_channel
-
 					  if (NRF24_write(channel_buffer, 32))
 					  {
 						  /* Finish */
@@ -345,44 +382,20 @@ int main(void)
 			  }
 			  else
 			  {
-				  /*
-				  HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_0);
-				  HAL_Delay(100);
-				  */
-
 				  if (NRF24_available())
 				  {
 					  NRF24_read(rxData, 32);
 
-					  //don't compare, instead just set channel to whatever came across
 					  NRF24_setChannel(atoi(rxData));
 					  NRF24_stopListening();
 					  pairing = 0;
-					  /*
-					  if (strcmp(rxData, "108") == 0)
-					  {
-						  //Finish
-
-
-					  }
-				  	  */
 				  }
 			  }
 		  }
 	  }
 	  else
 	  {
-		  /* Pairing done */
-		  /*
-		  if (master)
-		  {
-			  HAL_GPIO_WritePin(GPIOF, Top_LED_Pin, SET);
-		  }
-		  else
-		  {
-			  HAL_GPIO_WritePin(GPIOF, Bottom_LED_Pin, SET);
-		  }
-		  */
+		  /* Pairing done, turning status laser to solid */
 		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, SET);
 
 		  if (waiting_for_reload)
@@ -391,12 +404,12 @@ int main(void)
 			  {
 				  if (NRF24_write(track_buffer, 32))
 				  {
-					  shots = 0;
-					  waiting_for_reload = 0;
-					  for (int i = 0x002699; i < 0x005739; i++)
-					  {
-						  dacOutput(flashRead(i));
-					  }
+					  /*
+					   * At this point, the Slave has accepted our reload instruction.
+					   *
+					   * Both guns are now at the same point in our code, and we can assume they are perfectly synchronized.
+					   */
+					  reload();
 					  playTrack(track_number);
 				  }
 			  }
@@ -404,60 +417,54 @@ int main(void)
 			  {
 				  if (NRF24_available())
 				  {
+					  /*
+					   * At this point, the Master has broadcasted the reload instruction.
+					   *
+					   * Both guns are now at the same point in our code, and we can assume they are perfectly synchronized.
+					   */
 					  NRF24_read(rxData, 32);
-					  shots = 0;
-					  waiting_for_reload = 0;
 
-					  for (int i = 0x002699; i < 0x005739; i++)
-					  {
-						  dacOutput(flashRead(i));
-					  }
-
+					  reload();
 					  playTrack(atoi(rxData));
 				  }
 			  }
-
-
 		  }
 		  else
 		  {
-			  //turn off radio for duration of shots
+			  /* Turn off radio for duration of shots */
 			  NRF24_powerDown();
+
+
+			  /* Trigger_Pin is active low */
 			  if (!HAL_GPIO_ReadPin(GPIOA, Trigger_Pin))
 			  {
-				  shots++;
-				  if (shots & 1)
-				  {
-					  HAL_GPIO_WritePin(GPIOF, Top_LED_Pin, SET);
-				  }
-				  else
-				  {
-					  HAL_GPIO_WritePin(GPIOF, Bottom_LED_Pin, SET);
-				  }
+				  /*
+				   * Integer passed to shoot() function determines barrel LED flash duration.
+				   *
+				   * Calculation is roughly "(integer / 10) milliseconds"
+				   *
+				   * Thus "1000" is about 100ms
+				   *
+				   */
+				  shoot(1000);
 
 
-				  for (int i = 0x00002c; i < 0x002474; i++)
-				  {
-					  dacOutput(flashRead(i));
-					  if (i == 0x0002c + 1000)
-					  {
-						  HAL_GPIO_WritePin(GPIOF, Top_LED_Pin|Bottom_LED_Pin, RESET);
-					  }
-				  }
 
+
+				  /* Personal preference, but I like this delay in here... feels better */
 				  HAL_Delay(10);
 
 				  if (shots == 4)
 				  {
 					  if (master)
 					  {
-						  //pick and store track number in global variable
+						  /* Randomly pick, and then store track number in global variable */
 						  track_number = rnd_number(0, 24);
 						  itoa(track_number, track_buffer, 10);
 					  }
 					  else
 					  {
-						  //turn on radio
+						  /* Now we turn the radio back on, because we need to listen for the reload instruction from the Master */
 						  NRF24_powerUp();
 					  }
 					  waiting_for_reload = 1;
