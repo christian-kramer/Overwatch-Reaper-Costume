@@ -334,3 +334,19 @@ Some bigger parts have also been printed, such as one half of the front barrel w
 Inside, the slot for the tray, and the cavity for the front-facing fiber optic cable look great!
 
 ![Front barrel inside](https://i.imgur.com/7keeL8f.jpg)
+
+Back to PCB-land for a moment; it's firmware time!
+
+Now, the only human interface our guns have is the trigger... so that means that the logical distinction of which of the two boards is in charge of making decisions like what channel to communicate on, when to reload, and which voice line to play after the reload needs to be made in software, and not with a jumper or DIP switch or something.
+
+The best way I could think of to describe how the two boards need to behave was to make a flowchart:
+
+![Firmware Flow Chart](https://i.imgur.com/kuW9K1K.png)
+
+What I've made here is called a "Finite-State Machine", which is a machine that can be in exactly one of a finite number of states at any given time. This computational paradigm is, in practice, insanely reliable and thus used extensively in industrial automation and "black-box" consumer electronics.
+
+Check out my [`main.c`](https://github.com/christian-kramer/Overwatch-Reaper-Costume/blob/master/Electrical/Source/Main%20Firmware/Src/main.c) showing how I implemented this logic. Commented to enhance readibility.
+
+And, to see this whole thing in action, check out this video I made of all 4 boards operating in the same general vicinity with no interference:
+
+[https://youtu.be/M1ywswBbeoI](https://youtu.be/M1ywswBbeoI)
