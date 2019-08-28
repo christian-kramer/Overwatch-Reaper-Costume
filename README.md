@@ -391,4 +391,4 @@ After:
 
 ![After Paint](https://i.imgur.com/1vSOmde.jpg?1)
 
-Black was the chosen base coat, to be followed by silver in applicable areas.
+Matte Black was the chosen base coat, to be followed by silver in applicable areas.
