@@ -350,3 +350,45 @@ Check out my [`main.c`](https://github.com/christian-kramer/Overwatch-Reaper-Cos
 And, to see this whole thing in action, check out this video I made of all 4 boards operating in the same general vicinity with no interference:
 
 [https://youtu.be/M1ywswBbeoI](https://youtu.be/M1ywswBbeoI)
+
+With the electronics completed, it was back to getting all the parts 3D printed.
+
+A second 3D printer was purchased to help cope with the amount of printing, an Ender 3 Pro by Creality. After some setup, it was off to the races (for only $200!)
+
+![Ender 3 Pro](https://i.imgur.com/7uRDzoG.jpg)
+
+Eventually, all the pieces needed for one of the guns were printed!
+
+![Parts](https://i.imgur.com/SZofQl8.jpg)
+
+It was time to do a test fit to see how everything went together. While it looks like a very complicated assembly process, the pieces are actually quite intuitive to put together since they're all so unique.
+
+![4 Parts](https://i.imgur.com/oEZt3GU.jpg)
+
+![Assembled](https://i.imgur.com/OI1Hing.jpg)
+
+See, very simple. It's not glued together yet, this is just a test-fit to see how it all sizes up and if there's any parts that need a little TLC. But everything fit nice and snug, and lined up the first time!
+
+And, of course, ruler for scale:
+
+![Ruler](https://i.imgur.com/0YKFCQU.jpg)
+
+Other parts for the costume started to get printed as well, like various pieces of Reaper's 4 belts:
+
+![Belt Box](https://i.imgur.com/9UHhQjl.jpg?1)
+
+And, here it is for size:
+
+![Belt Box Size](https://i.imgur.com/7KGykKS.jpg)
+
+Next, it was time for sanding and a round of paint! Time to make these pieces *really* look good!
+
+Before:
+
+![Before Paint](https://i.imgur.com/tFbtE0u.jpg?1)
+
+After:
+
+![After Paint](https://i.imgur.com/1vSOmde.jpg?1)
+
+Black was the chosen base coat, to be followed by silver in applicable areas.
