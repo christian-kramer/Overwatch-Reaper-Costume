@@ -1,5 +1,5 @@
-# Overwatch-Reaper-Guns
-Design files for Reaper's cosplay guns from Overwatch
+# Overwatch-Reaper-Costume
+Design files for Reaper's costume from Overwatch
 
 ---
 
@@ -391,4 +391,49 @@ After:
 
 ![After Paint](https://i.imgur.com/1vSOmde.jpg?1)
 
-Matte Black was the chosen base coat, to be followed by silver in applicable areas.
+Black was the chosen base coat, to be followed by silver in applicable areas.
+
+![Medallion](https://i.imgur.com/YFNno7U.png)
+
+Together, they make a really neat effect!
+
+![Silver Parts](https://i.imgur.com/NHHcUNF.png)
+
+All of the parts came out really shiny, and they look amazing.
+
+Next, it was time for the big prints! The gauntlets were to be printed in two parts... a smaller, lower wristpiece... and a gigantic upper forearm piece that would take many hours and have a relatively high probability of failure.
+
+![Gauntlet](https://i.imgur.com/b3DxcJR.png)
+
+But... dang! Fresh off the printer, the first one looks amazing! It's a little angular due to having to manually stitch some polygons together in Cinema 4D, but that'll clean up after some sanding.
+
+So, arms are coming along nicely, but now it's time for the legs! We've got some boots to make. But I don't feel like making a boot from scratch, so let's find an existing pair to build off of. We had an old pair of motorcycle boots that resembled the shape of Reaper's boots that we could add parts to. But... the parts in their current form won't fit the boot perfectly, and I'm not willing to sit there printing adjustment after adjustment just to hone in on the right shape. I need to know that the part I'm printing is going to fit, 100%. So, how do we do this?
+
+An idea I had was to use photogrammetry to "scan" the boots into Cinema 4D, and then mold the pieces virtually before printing.
+
+We took video of all angles of the boots to give Agisoft Photoscan every possible detail to work off of. In After Effects, I keyed out the pink backdrop to generate an alpha channel mask for every frame of the video, which was then exported as a PNG sequence with alpha channel. That gave us about 1000 camera angles to work with, which in my experience should be plenty to get an accurate model.
+
+After a few nights of computation, Photoscan spit this out:
+
+![Boot 3D Model](https://i.imgur.com/x7WmI2C.gif)
+
+Beautiful! I can work with this.
+
+After a bit of work, I made this in Cinema 4D:
+
+![Boot Parts 3D Model](https://i.imgur.com/BhN5fCS.jpg)
+
+Yeah, it clips a little bit... but boots aren't completely solid, so these parts should fit.
+
+And... It definitely looks like they will! No wasted PLA plastic here. This method totally works!
+
+![3D Printed Boot Fitting](https://i.imgur.com/hmFE80p.png)
+
+Meanwhile, while all this is going on, the PCBs have arrived at their final destination and are ready to be mated to the 3D printed gun for the first time.
+
+
+![Gun Test Firing](https://i.imgur.com/vJw068l.gif)
+
+And... there it is! Sound works, the LEDs line up with the barrels properly, and it's definitely loud and bright enough!
+
+The connection between the radio and microcontroller on the PCB is a little shaky, though, which is something I encountered on my bench tests... It may be necessary to do a "revision 2" of the boards in order to remedy the issue and make it more reliable.
